@@ -1,10 +1,114 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Arjun's First Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arjun's Website</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 70px 20px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+        }
+
+        .card {
+            background: white;
+            width: 90%;
+            max-width: 700px;
+            margin: auto;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        .card h2 {
+            color: #111827;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            background: #0088cc;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin: 8px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 25px;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
-    <h1>This is my first website</h1>
-    <p>Developed by Arjun</p>
+
+<header>
+    <h1>Welcome to Arjun's Website 🚀</h1>
+    <p>Learning • Building • Growing</p>
+</header>
+
+<div class="card">
+    <h2>About Me</h2>
+
+    <p>
+        Hi, I'm Arjun. Welcome to my first website.
+        I'm learning web development and exploring
+        new technologies every day.
+    </p>
+
+    <a href="https://t.me/arjunx18" target="_blank" class="btn">
+        Telegram
+    </a>
+
+</div>
+
+<footer>
+    © 2026 Arjun | Developed by Arjun
+</footer>
+
 </body>
 </html>
+```
+
