@@ -1,787 +1,106 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IPL Hardcore Quiz — by Arjun</title>
-<meta name="description" content="IPL Hardcore Records Quiz — 7 brutal IPL questions. Built by Arjun.">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-deep: #030711;
-    --bg-card: rgba(10, 20, 45, 0.75);
-    --neon-blue: #00d4ff;
-    --neon-cyan: #00ffcc;
-    --neon-gold: #ffd700;
-    --orange: #ff6b35;
-    --text: #e8f4ff;
-    --text-muted: #7a9abf;
-    --border: rgba(0, 212, 255, 0.18);
-    --correct: #00ffaa;
-    --wrong: #ff4060;
-    --timer-warn: #ffaa00;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Advanced SEO Meta Tags -->
+    <title>Next Toppers – Best Study Platform for Class 8-12, JEE & NEET</title>
+    <meta name="description" content="Next Toppers is India's leading educational platform providing free study material, class 8 to 12 notes, JEE & NEET preparation, online video lectures, mock tests, and DPP PDF downloads. Join our free batches today!" />
+    <meta name="keywords" content="Next Toppers, free study material, class 8 to 12 notes, JEE preparation, NEET preparation, online lectures, CBSE study platform, educational website India, free batches, video lectures, mock tests, DPP PDF download" />
+    <meta name="author" content="Next Toppers" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://next-topper-two.vercel.app/" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://next-topper-two.vercel.app/" />
+    <meta property="og:title" content="Next Toppers – Best Study Platform for Class 8-12, JEE & NEET" />
+    <meta property="og:description" content="India's leading educational platform for board & competitive exams. Get free notes, video lectures, and mock tests for Class 8-12, JEE, and NEET." />
+    <meta property="og:image" content="https://i.postimg.cc/KjvFgP0h/favicon.jpg" />
+    <meta property="og:site_name" content="Next Toppers" />
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://next-topper-two.vercel.app/" />
+    <meta property="twitter:title" content="Next Toppers – Best Study Platform for Class 8-12, JEE & NEET" />
+    <meta property="twitter:description" content="India's leading educational platform for board & competitive exams. Get free notes, video lectures, and mock tests for Class 8-12, JEE, and NEET." />
+    <meta property="twitter:image" content="https://i.postimg.cc/KjvFgP0h/favicon.jpg" />
 
-  body {
-    font-family: 'Rajdhani', sans-serif;
-    background: var(--bg-deep);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 50% at 20% 10%, rgba(0,100,255,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,212,255,0.08) 0%, transparent 55%),
-      radial-gradient(ellipse 100% 60% at 50% 50%, rgba(0,20,60,0.9) 0%, transparent 80%);
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(0,212,255,0.015) 60px, rgba(0,212,255,0.015) 61px),
-      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(0,212,255,0.015) 60px, rgba(0,212,255,0.015) 61px);
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  /* ===== MAIN CONTENT AREA ===== */
-  .page-main {
-    position: relative;
-    z-index: 1;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 20px 16px;
-  }
-
-  /* ===== SCREENS ===== */
-  .screen { display: none; width: 100%; max-width: 700px; }
-  .screen.active { display: block; }
-
-  /* ===== GLASSMORPHISM CARD ===== */
-  .glass {
-    background: var(--bg-card);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow:
-      0 0 40px rgba(0,212,255,0.08),
-      0 20px 60px rgba(0,0,0,0.6),
-      inset 0 1px 0 rgba(255,255,255,0.06);
-  }
-  @media (max-width: 480px) { .glass { padding: 28px 20px; } }
-
-  /* ===== START SCREEN ===== */
-  .logo-badge {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  .logo-icon {
-    width: 54px; height: 54px;
-    background: linear-gradient(135deg, #00d4ff, #0050ff);
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-    box-shadow: 0 0 20px rgba(0,212,255,0.4);
-  }
-  .logo-text {
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--neon-blue);
-    text-transform: uppercase;
-    line-height: 1.4;
-  }
-  .logo-text span { display: block; font-size: 8px; color: var(--text-muted); letter-spacing: 4px; }
-
-  h1.title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(52px, 10vw, 80px);
-    line-height: 0.9;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, #fff 30%, var(--neon-blue) 70%, var(--neon-cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  h1.title .orange {
-    background: linear-gradient(135deg, var(--orange), var(--neon-gold));
-    -webkit-background-clip: text; background-clip: text;
-  }
-
-  .subtitle {
-    font-size: 14px; color: var(--text-muted);
-    letter-spacing: 4px; text-transform: uppercase;
-    margin-bottom: 36px;
-  }
-
-  .stats-row { display: flex; gap: 16px; margin-bottom: 36px; flex-wrap: wrap; }
-  .stat-chip {
-    flex: 1; min-width: 100px;
-    background: rgba(0,212,255,0.06);
-    border: 1px solid rgba(0,212,255,0.15);
-    border-radius: 12px;
-    padding: 14px 16px;
-    text-align: center;
-  }
-  .stat-chip .val { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; color: var(--neon-blue); display: block; }
-  .stat-chip .lbl { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; display: block; }
-
-  .name-section label {
-    display: block; font-size: 12px; letter-spacing: 3px;
-    text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;
-  }
-  .name-input {
-    width: 100%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 18px;
-    color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px; font-weight: 600;
-    outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    margin-bottom: 20px;
-  }
-  .name-input:focus { border-color: var(--neon-blue); box-shadow: 0 0 20px rgba(0,212,255,0.15); }
-  .name-input::placeholder { color: rgba(255,255,255,0.2); }
-
-  /* ===== BUTTONS ===== */
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 10px; padding: 16px 36px; border-radius: 12px;
-    font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase;
-    cursor: pointer; border: none; outline: none;
-    transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-    position: relative; overflow: hidden;
-  }
-  .btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.06); opacity: 0; transition: opacity 0.2s; }
-  .btn:hover::after { opacity: 1; }
-  .btn:active { transform: scale(0.97); }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #0070ff, #00d4ff);
-    color: #fff; width: 100%;
-    font-size: 15px; padding: 18px;
-    box-shadow: 0 0 30px rgba(0,120,255,0.4), 0 4px 20px rgba(0,0,0,0.3);
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 45px rgba(0,150,255,0.6), 0 8px 30px rgba(0,0,0,0.4); }
-
-  .btn-secondary {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid var(--border);
-    color: var(--text);
-  }
-  .btn-secondary:hover { border-color: var(--neon-blue); box-shadow: 0 0 20px rgba(0,212,255,0.15); transform: translateY(-2px); }
-
-  /* ===== QUIZ SCREEN ===== */
-  .quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-  .q-counter { font-family: 'Orbitron', monospace; font-size: 12px; color: var(--text-muted); letter-spacing: 2px; }
-  .q-counter span { color: var(--neon-blue); font-size: 18px; font-weight: 900; }
-
-  .timer-ring { position: relative; width: 56px; height: 56px; }
-  .timer-ring svg { transform: rotate(-90deg); }
-  .timer-ring circle { fill: none; stroke-width: 4; stroke-linecap: round; }
-  .timer-bg { stroke: rgba(255,255,255,0.08); }
-  .timer-arc { stroke: var(--neon-blue); transition: stroke-dashoffset 1s linear, stroke 0.3s; stroke-dasharray: 138; stroke-dashoffset: 0; }
-  .timer-num {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; color: var(--neon-blue);
-  }
-
-  .progress-bar { height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; margin-bottom: 28px; overflow: hidden; }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #0070ff, #00d4ff, var(--neon-cyan));
-    border-radius: 2px;
-    transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
-    box-shadow: 0 0 10px rgba(0,212,255,0.6);
-  }
-
-  .q-category {
-    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--orange); margin-bottom: 10px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .q-category::before { content: ''; width: 20px; height: 2px; background: var(--orange); border-radius: 1px; display: inline-block; }
-
-  .question-text {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(18px, 3.5vw, 22px); font-weight: 700; line-height: 1.4;
-    color: #fff; margin-bottom: 28px; letter-spacing: 0.3px;
-  }
-
-  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-  @media (max-width: 480px) { .options-grid { grid-template-columns: 1fr; } }
-
-  .option { position: relative; cursor: pointer; }
-  .option input { position: absolute; opacity: 0; }
-  .option-label {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 18px;
-    background: rgba(255,255,255,0.03);
-    border: 1.5px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative; overflow: hidden;
-  }
-  .option-label::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(90deg, rgba(0,212,255,0.06), transparent);
-    opacity: 0; transition: opacity 0.2s;
-  }
-  .option:hover .option-label { border-color: rgba(0,212,255,0.35); box-shadow: 0 0 20px rgba(0,212,255,0.1); transform: translateY(-2px); }
-  .option:hover .option-label::before { opacity: 1; }
-  .option input:checked + .option-label { border-color: var(--neon-blue); background: rgba(0,212,255,0.08); box-shadow: 0 0 25px rgba(0,212,255,0.2); }
-
-  .option-key {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; color: var(--neon-blue);
-    flex-shrink: 0; transition: all 0.2s;
-  }
-  .option input:checked + .option-label .option-key { background: var(--neon-blue); color: #000; }
-  .option-text { font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--text); }
-
-  .option-label.correct { border-color: var(--correct) !important; background: rgba(0,255,170,0.1) !important; box-shadow: 0 0 25px rgba(0,255,170,0.25) !important; }
-  .option-label.correct .option-key { background: var(--correct) !important; color: #000 !important; border-color: var(--correct) !important; }
-  .option-label.wrong { border-color: var(--wrong) !important; background: rgba(255,64,96,0.1) !important; box-shadow: 0 0 25px rgba(255,64,96,0.15) !important; }
-  .option-label.wrong .option-key { background: var(--wrong) !important; color: #fff !important; border-color: var(--wrong) !important; }
-
-  .feedback-bar {
-    padding: 12px 18px; border-radius: 12px;
-    font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
-    margin-bottom: 16px; display: none; align-items: center; gap: 10px;
-  }
-  .feedback-bar.correct { display: flex; background: rgba(0,255,170,0.1); border: 1px solid rgba(0,255,170,0.3); color: var(--correct); }
-  .feedback-bar.wrong { display: flex; background: rgba(255,64,96,0.1); border: 1px solid rgba(255,64,96,0.25); color: var(--wrong); }
-  .feedback-fact { font-size: 12px; color: var(--text-muted); margin-top: 4px; display: block; }
-
-  .next-row { display: flex; justify-content: flex-end; }
-  .btn-next { min-width: 160px; width: auto; }
-
-  /* ===== RESULT SCREEN ===== */
-  .result-hero { text-align: center; padding: 10px 0 30px; }
-  .score-ring { width: 140px; height: 140px; margin: 0 auto 20px; position: relative; }
-  .score-ring svg { transform: rotate(-90deg); }
-  .score-ring circle { fill: none; stroke-width: 8; stroke-linecap: round; }
-  .ring-bg { stroke: rgba(255,255,255,0.06); }
-  .ring-fill { stroke: var(--neon-blue); stroke-dasharray: 380; stroke-dashoffset: 380; transition: stroke-dashoffset 1.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s, stroke 0.5s; filter: drop-shadow(0 0 8px rgba(0,212,255,0.6)); }
-  .score-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .score-num { font-family: 'Bebas Neue', sans-serif; font-size: 48px; line-height: 1; background: linear-gradient(135deg, #fff, var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .score-total { font-family: 'Orbitron', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 2px; }
-  .result-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 3px; margin-bottom: 6px; }
-  .result-sub { font-size: 13px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
-
-  .result-actions { display: flex; gap: 12px; margin-top: 28px; }
-  .result-actions .btn { flex: 1; }
-
-  /* ===== LEADERBOARD ===== */
-  .lb-section { margin-top: 28px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.06); }
-  .lb-title {
-    font-family: 'Orbitron', monospace; font-size: 11px; letter-spacing: 4px;
-    text-transform: uppercase; color: var(--neon-gold); margin-bottom: 16px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .lb-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,215,0,0.3), transparent); }
-  .lb-list { display: flex; flex-direction: column; gap: 8px; }
-  .lb-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; border-radius: 12px;
-    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-    transition: all 0.2s;
-  }
-  .lb-item:hover { border-color: rgba(0,212,255,0.2); background: rgba(0,212,255,0.04); }
-  .lb-item.top1 { border-color: rgba(255,215,0,0.3); background: rgba(255,215,0,0.04); }
-  .lb-item.top2 { border-color: rgba(192,192,192,0.25); }
-  .lb-item.top3 { border-color: rgba(205,127,50,0.25); }
-  .lb-item.current { border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.06); box-shadow: 0 0 20px rgba(0,212,255,0.1); }
-  .lb-rank { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; width: 28px; text-align: center; color: var(--text-muted); }
-  .lb-item.top1 .lb-rank { color: var(--neon-gold); font-size: 18px; }
-  .lb-item.top2 .lb-rank { color: #c0c0c0; }
-  .lb-item.top3 .lb-rank { color: #cd7f32; }
-  .lb-name { flex: 1; font-size: 16px; font-weight: 600; color: var(--text); }
-  .lb-score { font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 700; color: var(--neon-blue); }
-  .lb-date { font-size: 11px; color: var(--text-muted); }
-  .lb-empty { text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px; letter-spacing: 1px; }
-
-  /* ===== FOOTER ===== */
-  .site-footer {
-    position: relative;
-    z-index: 1;
-    padding: 0 20px 28px;
-  }
-  .footer-card {
-    max-width: 700px;
-    margin: 0 auto;
-    background: rgba(8,16,38,0.8);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(0,212,255,0.1);
-    border-radius: 16px;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .footer-left { display: flex; align-items: center; gap: 10px; }
-  .footer-avatar {
-    width: 34px; height: 34px; border-radius: 9px;
-    background: linear-gradient(135deg, #0050ff, #00d4ff);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; flex-shrink: 0;
-    box-shadow: 0 0 12px rgba(0,150,255,0.3);
-  }
-  .footer-dev-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 1px; }
-  .footer-dev-name { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; color: var(--neon-blue); letter-spacing: 1px; }
-
-  .tg-link {
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 8px 18px;
-    background: rgba(0,136,204,0.12);
-    border: 1px solid rgba(0,160,220,0.28);
-    border-radius: 40px;
-    color: #40c8ff;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
-    text-decoration: none;
-    transition: all 0.25s;
-    white-space: nowrap;
-  }
-  .tg-link:hover {
-    background: rgba(0,136,204,0.25);
-    border-color: rgba(0,180,255,0.5);
-    box-shadow: 0 0 18px rgba(0,150,255,0.22);
-    transform: translateY(-2px);
-    color: #fff;
-  }
-
-  /* ===== CONFETTI ===== */
-  .confetti-piece {
-    position: fixed; width: 8px; height: 10px; top: -20px;
-    border-radius: 2px; animation: confetti-fall linear forwards;
-    z-index: 1000; pointer-events: none;
-  }
-  @keyframes confetti-fall {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    80% { opacity: 1; }
-    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-  }
-
-  /* ===== FLASH ===== */
-  .flash { position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0; }
-  .flash.correct-flash { background: rgba(0,255,170,0.06); }
-  .flash.wrong-flash { background: rgba(255,64,96,0.06); }
-  .flash.show { animation: flash-out 0.4s forwards; }
-  @keyframes flash-out { 0% { opacity:1; } 100% { opacity:0; } }
-
-  /* ===== ENTRANCE ===== */
-  .screen.active .glass { animation: rise 0.5s cubic-bezier(0.34,1.56,0.64,1); }
-  @keyframes rise { from { opacity:0; transform:translateY(30px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
-
-  /* ===== TOAST ===== */
-  .share-toast {
-    position: fixed; bottom: 30px; left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: rgba(0,212,255,0.15);
-    border: 1px solid rgba(0,212,255,0.3);
-    backdrop-filter: blur(12px);
-    color: var(--neon-blue); padding: 12px 24px;
-    border-radius: 40px; font-size: 13px; font-weight: 600; letter-spacing: 1px;
-    opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 1000;
-  }
-  .share-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-</style>
-</head>
-<body>
-
-<!-- ===== MAIN CONTENT ===== -->
-<main class="page-main">
-
-  <!-- START SCREEN -->
-  <div class="screen active" id="screen-start">
-    <div class="glass">
-      <div class="logo-badge">
-        <div class="logo-icon">🏏</div>
-        <div class="logo-text">IPL RECORDS <span>KNOWLEDGE TEST</span></div>
-      </div>
-      <h1 class="title">IPL<br><span class="orange">HARDCORE</span><br>QUIZ</h1>
-      <p class="subtitle">⚡ Ultimate Records Edition</p>
-      <div class="stats-row">
-        <div class="stat-chip"><span class="val">7</span><span class="lbl">Questions</span></div>
-        <div class="stat-chip"><span class="val">15s</span><span class="lbl">Per Q</span></div>
-        <div class="stat-chip"><span class="val">🏆</span><span class="lbl">Leaderboard</span></div>
-      </div>
-      <div class="name-section">
-        <label>Your Name / Cricket Handle</label>
-        <input type="text" class="name-input" id="player-name" placeholder="Enter your name..." maxlength="20" />
-      </div>
-      <button class="btn btn-primary" onclick="startQuiz()">▶ START QUIZ</button>
-      <div class="lb-section">
-        <div class="lb-title">🏆 Leaderboard</div>
-        <div class="lb-list" id="lb-start"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- QUIZ SCREEN -->
-  <div class="screen" id="screen-quiz">
-    <div class="glass">
-      <div class="quiz-header">
-        <div class="q-counter">Q <span id="q-num">1</span> <span style="color:var(--text-muted);font-size:13px">/ 7</span></div>
-        <div class="timer-ring">
-          <svg width="56" height="56" viewBox="0 0 56 56">
-            <circle class="timer-bg" cx="28" cy="28" r="22"/>
-            <circle class="timer-arc" id="timer-arc" cx="28" cy="28" r="22"/>
-          </svg>
-          <div class="timer-num" id="timer-num">15</div>
-        </div>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-      <div class="q-category" id="q-category">IPL Records</div>
-      <div class="question-text" id="question-text"></div>
-      <div class="options-grid" id="options-grid"></div>
-      <div class="feedback-bar" id="feedback-bar">
-        <span id="feedback-icon">✓</span>
-        <div><span id="feedback-msg"></span><span class="feedback-fact" id="feedback-fact"></span></div>
-      </div>
-      <div class="next-row">
-        <button class="btn btn-primary btn-next" id="btn-next" onclick="nextQuestion()" style="display:none">NEXT →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- RESULT SCREEN -->
-  <div class="screen" id="screen-result">
-    <div class="glass">
-      <div class="result-hero">
-        <div class="score-ring">
-          <svg width="140" height="140" viewBox="0 0 140 140">
-            <circle class="ring-bg" cx="70" cy="70" r="60"/>
-            <circle class="ring-fill" id="ring-fill" cx="70" cy="70" r="60"/>
-          </svg>
-          <div class="score-center">
-            <div class="score-num" id="result-score">0</div>
-            <div class="score-total">OUT OF 7</div>
-          </div>
-        </div>
-        <div class="result-title" id="result-title">RESULT</div>
-        <div class="result-sub" id="result-sub">—</div>
-      </div>
-      <div class="result-actions">
-        <button class="btn btn-secondary" onclick="shareScore()">📤 Share</button>
-        <button class="btn btn-primary" onclick="restartQuiz()">↩ Retry</button>
-      </div>
-      <div class="lb-section">
-        <div class="lb-title">🏆 Leaderboard</div>
-        <div class="lb-list" id="lb-result"></div>
-      </div>
-    </div>
-  </div>
-
-</main>
-
-<!-- ===== FOOTER ===== -->
-<footer class="site-footer">
-  <div class="footer-card">
-    <div class="footer-left">
-      <div class="footer-avatar">👨‍💻</div>
-      <div>
-        <span class="footer-dev-label">Developed by</span>
-        <span class="footer-dev-name">Arjun</span>
-      </div>
-    </div>
-    <a class="tg-link" href="https://t.me/arjunx18" target="_blank" rel="noopener noreferrer">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-      </svg>
-      Contact @arjunx18
-    </a>
-  </div>
-</footer>
-
-<!-- Overlays -->
-<div class="flash" id="flash"></div>
-<div class="share-toast" id="share-toast">📋 Score copied to clipboard!</div>
-
-<script>
-  // ===== QUIZ DATA =====
-  const questions = [
+    <!-- Structured Data: JSON-LD -->
+    <script type="application/ld+json">
     {
-      category: "Batting Records",
-      text: "What is the highest individual score ever recorded in IPL history?",
-      options: ["Chris Gayle ", "Brendon McCullum*", "AB de Villiers *", "Virat Kohli "],
-      correct: 0,
-      fact: "Chris Gayle smashed 175* off just 66 balls for RCB vs PWI in 2013 — the all-time IPL record."
-    },
-    {
-      category: "Season Records",
-      text: "Who holds the record for most runs in a single IPL season?",
-      options: ["David Warner ", "Virat Kohli ", "Jos Buttler ", "Kane Williamson "],
-      correct: 1,
-      fact: "Virat Kohli scored 973 runs in IPL 2016 for RCB — the all-time single-season record, including 4 centuries."
-    },
-    {
-      category: "Bowling Records",
-      text: "As of IPL 2026, who is the all-time leading wicket-taker in IPL history?",
-      options: ["Lasith Malinga ", "Dwayne Bravo ", "Yuzvendra Chahal — ", "Bhuvneshwar Kumar"],
-      correct: 2,
-      fact: "Yuzvendra Chahal surpassed Dwayne Bravo to become IPL's all-time highest wicket-taker, crossing 200 wickets."
-    },
-    {
-      category: "Team Records",
-      text: "What is the highest team total ever posted in an IPL match?",
-      options: ["RCB ", "SRH ", "KKR ", "MI "],
-      correct: 1,
-      fact: "SRH posted 287/3 against RCB in IPL 2024, powered by Travis Head (89) and Abhishek Sharma (63)."
-    },
-    {
-      category: "Milestone Records",
-      text: "Who scored the FIRST century in IPL history — in the very first match of IPL 2008?",
-      options: ["Chris Gayle", "Sachin Tendulkar", "Brendon McCullum", "Virender Sehwag"],
-      correct: 2,
-      fact: "Brendon McCullum blasted 158* in the inaugural IPL match (KKR vs RCB, 2008) — the tournament's first ever century."
-    },
-    {
-      category: "Power Hitting",
-      text: "Who holds the record for most sixes hit in IPL history?",
-      options: ["MS Dhoni", "Rohit Sharma", "Chris Gayle", "AB de Villiers"],
-      correct: 2,
-      fact: "Chris Gayle holds the record for most sixes in IPL history with over 350 sixes — likely unbeaten for decades."
-    },
-    {
-      category: "Championship Records",
-      text: "Which team has won the most IPL titles in history (as of 2026)?",
-      options: ["CSK — 5 titles", "MI — 5 titles", "Both MI and CSK — 5 titles each", "KKR — 4 titles"],
-      correct: 2,
-      fact: "Both Mumbai Indians and Chennai Super Kings share the record with 5 IPL titles each — the most by any franchise."
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Next Toppers",
+      "url": "https://next-topper-two.vercel.app/",
+      "logo": "https://i.postimg.cc/KjvFgP0h/favicon.jpg",
+      "description": "Premium educational platform providing resources for CBSE Class 8-12, JEE, and NEET preparation.",
+      "sameAs": [
+        "https://www.facebook.com/nexttoppers",
+        "https://www.instagram.com/nexttoppers",
+        "https://www.youtube.com/nexttoppers"
+      ]
     }
-  ];
-
-  // ===== STATE =====
-  let currentQ = 0, score = 0, playerName = '', answered = false;
-  let timerInterval = null, timeLeft = 15;
-  const TIMER_DURATION = 15, CIRCUMFERENCE = 138;
-
-  // ===== LEADERBOARD =====
-  function getLeaderboard() {
-    try { return JSON.parse(localStorage.getItem('iplQuizLB') || '[]'); } catch { return []; }
-  }
-  function saveLeaderboard(lb) { localStorage.setItem('iplQuizLB', JSON.stringify(lb)); }
-  function addScore(name, sc) {
-    const lb = getLeaderboard();
-    lb.push({ name, score: sc, date: new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short'}) });
-    lb.sort((a,b) => b.score - a.score);
-    saveLeaderboard(lb.slice(0, 10));
-    return lb.slice(0, 10);
-  }
-  function renderLeaderboard(containerId, highlightName) {
-    const lb = getLeaderboard();
-    const el = document.getElementById(containerId);
-    if (!lb.length) { el.innerHTML = '<div class="lb-empty">No scores yet. Be the first! 🏏</div>'; return; }
-    const medals = ['🥇','🥈','🥉'];
-    const rankClass = ['top1','top2','top3'];
-    el.innerHTML = lb.slice(0,5).map((e,i) => `
-      <div class="lb-item ${rankClass[i]||''} ${(e.name===highlightName && e.score===score)?'current':''}">
-        <div class="lb-rank">${medals[i]||(i+1)}</div>
-        <div class="lb-name">${esc(e.name)}</div>
-        <div><div class="lb-score">${e.score}/7</div><div class="lb-date">${e.date}</div></div>
-      </div>`).join('');
-  }
-  function esc(s) { return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-  // ===== SCREENS =====
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }
-
-  // ===== START =====
-  function startQuiz() {
-    const inp = document.getElementById('player-name').value.trim();
-    if (!inp) { document.getElementById('player-name').style.borderColor='var(--wrong)'; document.getElementById('player-name').focus(); return; }
-    playerName = inp;
-    currentQ = 0; score = 0;
-    showScreen('screen-quiz');
-    loadQuestion();
-  }
-
-  // ===== TIMER =====
-  function startTimer() {
-    clearInterval(timerInterval);
-    timeLeft = TIMER_DURATION;
-    updateTimerUI();
-    timerInterval = setInterval(() => {
-      timeLeft--;
-      updateTimerUI();
-      if (timeLeft <= 0) { clearInterval(timerInterval); if (!answered) autoFail(); }
-    }, 1000);
-  }
-  function updateTimerUI() {
-    const arc = document.getElementById('timer-arc');
-    const num = document.getElementById('timer-num');
-    arc.style.strokeDashoffset = CIRCUMFERENCE * (1 - timeLeft / TIMER_DURATION);
-    num.textContent = timeLeft;
-    const color = timeLeft <= 5 ? 'var(--wrong)' : timeLeft <= 8 ? 'var(--timer-warn)' : 'var(--neon-blue)';
-    arc.style.stroke = color; num.style.color = color;
-  }
-  function autoFail() {
-    answered = true;
-    revealAnswer(-1);
-    document.getElementById('btn-next').style.display = 'flex';
-  }
-
-  // ===== LOAD QUESTION =====
-  function loadQuestion() {
-    answered = false;
-    const q = questions[currentQ];
-    document.getElementById('q-num').textContent = currentQ + 1;
-    document.getElementById('q-category').textContent = q.category;
-    document.getElementById('question-text').textContent = q.text;
-    document.getElementById('progress-fill').style.width = ((currentQ / 7) * 100) + '%';
-    document.getElementById('feedback-bar').className = 'feedback-bar';
-    document.getElementById('btn-next').style.display = 'none';
-    const keys = ['A','B','C','D'];
-    document.getElementById('options-grid').innerHTML = q.options.map((opt, i) => `
-      <label class="option">
-        <input type="radio" name="answer" value="${i}" onchange="selectAnswer(${i})">
-        <div class="option-label" id="opt-${i}">
-          <div class="option-key">${keys[i]}</div>
-          <div class="option-text">${opt}</div>
-        </div>
-      </label>`).join('');
-    startTimer();
-  }
-
-  // ===== SELECT / REVEAL =====
-  function selectAnswer(idx) {
-    if (answered) return;
-    answered = true;
-    clearInterval(timerInterval);
-    if (questions[currentQ].correct === idx) score++;
-    revealAnswer(idx);
-    document.getElementById('btn-next').style.display = 'flex';
-  }
-
-  function revealAnswer(chosen) {
-    const q = questions[currentQ];
-    document.querySelectorAll('input[name="answer"]').forEach(r => r.disabled = true);
-    document.getElementById('opt-' + q.correct).classList.add('correct');
-    if (chosen !== -1 && chosen !== q.correct) document.getElementById('opt-' + chosen).classList.add('wrong');
-    const ok = chosen === q.correct;
-    const fb = document.getElementById('feedback-bar');
-    fb.className = 'feedback-bar ' + (ok ? 'correct' : 'wrong');
-    document.getElementById('feedback-icon').textContent = ok ? '✓' : (chosen === -1 ? '⏱' : '✗');
-    document.getElementById('feedback-msg').textContent = ok ? 'Correct! Well played!' : (chosen === -1 ? "Time's up!" : 'Wrong answer!');
-    document.getElementById('feedback-fact').textContent = q.fact;
-    const flash = document.getElementById('flash');
-    flash.className = 'flash ' + (ok ? 'correct-flash' : 'wrong-flash') + ' show';
-    setTimeout(() => flash.className = 'flash', 500);
-    playSound(ok);
-  }
-
-  // ===== SOUND =====
-  function playSound(correct) {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const notes = correct ? [523,659,784,1047] : [300,220];
-      notes.forEach((f, i) => {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
-        o.frequency.value = f; o.type = correct ? 'sine' : 'sawtooth';
-        const t = ctx.currentTime + i * (correct ? 0.08 : 0.12);
-        g.gain.setValueAtTime(0.12, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
-        o.start(t); o.stop(t + 0.22);
-      });
-    } catch {}
-  }
-
-  // ===== NEXT / END =====
-  function nextQuestion() {
-    currentQ++;
-    if (currentQ >= questions.length) endQuiz();
-    else loadQuestion();
-  }
-
-  function endQuiz() {
-    clearInterval(timerInterval);
-    addScore(playerName, score);
-    showScreen('screen-result');
-    document.getElementById('result-score').textContent = score;
-    const pct = score / 7;
-    const ring = document.getElementById('ring-fill');
-    setTimeout(() => {
-      ring.style.strokeDashoffset = 380 * (1 - pct);
-      ring.style.stroke = pct >= 0.85 ? 'var(--neon-gold)' : pct >= 0.6 ? 'var(--neon-blue)' : 'var(--text-muted)';
-    }, 100);
-    const tiers = [[7,'IPL LEGEND 🏆','Perfect Score — You ARE cricket'],[5,'IPL EXPERT 🔥','Elite cricket knowledge'],[3,'IPL FOLLOWER 📺','You follow the sport well'],[0,'IPL ROOKIE 🏏','Study the records and retry']];
-    const tier = tiers.find(t => score >= t[0]);
-    document.getElementById('result-title').textContent = tier[1];
-    document.getElementById('result-sub').textContent = tier[2];
-    if (score >= 5) setTimeout(confetti, 400);
-    renderLeaderboard('lb-result', playerName);
-  }
-
-  function restartQuiz() {
-    showScreen('screen-start');
-    renderLeaderboard('lb-start');
-    document.getElementById('player-name').value = '';
-  }
-
-  // ===== SHARE =====
-  function shareScore() {
-    const tier = score >= 7 ? 'IPL Legend 🏆' : score >= 5 ? 'IPL Expert 🔥' : score >= 3 ? 'IPL Follower 📺' : 'IPL Rookie 🏏';
-    const text = `🏏 IPL Hardcore Quiz\n${playerName} scored ${score}/7 — ${tier}\nCan you beat me? Try now! #IPLQuiz`;
-    navigator.clipboard?.writeText(text).catch(()=>{});
-    document.getElementById('share-toast').classList.add('show');
-    setTimeout(() => document.getElementById('share-toast').classList.remove('show'), 2500);
-  }
-
-  // ===== CONFETTI =====
-  function confetti() {
-    const colors = ['#00d4ff','#ffd700','#ff6b35','#00ffcc','#ff4060','#fff'];
-    for (let i = 0; i < 80; i++) {
-      setTimeout(() => {
-        const p = document.createElement('div');
-        p.className = 'confetti-piece';
-        p.style.cssText = `left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};width:${5+Math.random()*8}px;height:${8+Math.random()*12}px;animation-duration:${1.5+Math.random()*2}s;transform:rotate(${Math.random()*360}deg);border-radius:${Math.random()>.5?'50%':'2px'}`;
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 4000);
-      }, i * 25);
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://next-topper-two.vercel.app/",
+      "name": "Next Toppers",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://next-topper-two.vercel.app/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
     }
-  }
+    </script>
 
-  // ===== INIT =====
-  renderLeaderboard('lb-start');
-  document.getElementById('player-name').addEventListener('input', function(){ this.style.borderColor=''; });
-  document.getElementById('player-name').addEventListener('keydown', e => { if(e.key==='Enter') startQuiz(); });
-</script>
-</body>
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://i.postimg.cc" />
+    <link rel="preconnect" href="https://course.nexttoppers.com" />
+    
+    <!-- Main Favicon -->
+    <link rel="icon" type="image/jpg" href="https://i.postimg.cc/KjvFgP0h/favicon.jpg">
+    <!-- PNG Favicons -->
+    <link rel="icon" type="image/png" sizes="16x16" href="https://i.postimg.cc/q7hNNTzG/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://i.postimg.cc/D0qs8Kpg/favicon-32x32.png">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/8kBjJwzQ/apple-touch-icon.png">
+    <!-- Android Chrome Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="https://i.postimg.cc/7hmHBs58/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://i.postimg.cc/8cBJTms4/android-chrome-512x512.png">
+    
+    <!-- PWA / Mobile Theme -->
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Next Toppers">
+    <link rel="manifest" href="/manifest.json" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="/assets/index-L9gxlm3k.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DM82MPGA.css">
+  </head>
+  <body class="bg-[#050505] text-white">
+    <!-- SEO Semantic Content (Hidden from users, visible to crawlers) -->
+    <section style="display:none">
+      <h1>Next Toppers - India's Premium Education Hub</h1>
+      <p>Next Toppers is a comprehensive study platform for Class 8, 9, 10, 11, and 12 students. We offer class notes, JEE preparation modules, NEET preparation tests, and offline PDF downloads.</p>
+      <h2>Free Study Material for CBSE & State Boards</h2>
+      <ul>
+        <li>Free batches for Class 10 Board Exams</li>
+        <li>JEE Mains and Advanced Video Lectures</li>
+        <li>NEET Biology and Physics Mock Tests</li>
+        <li>Daily Practice Problems (DPP) PDF Download</li>
+        <li>Live and Recorded Online Lectures</li>
+      </ul>
+    </section>
+
+    <div id="root"></div>
+  </body>
 </html>
