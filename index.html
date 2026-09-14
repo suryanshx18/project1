@@ -1,4424 +1,1518 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>
-      ARJUN CRICKET — Live
-    </title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&amp;family=Manrope:wght@400;600;700;800;900&amp;family=Space+Grotesk:wght@500;700;800;900&amp;family=Syne:wght@700;800;900&amp;display=swap" rel="stylesheet" />
-    <style>
-      * {
-            -webkit-tap-highlight-color: transparent !important;
-            -webkit-touch-callout: none !important;
-            outline: none !important;
-        }
-    </style>
-  </head>
-  <body style="background-color:#050a0f;color:#fff;margin:0;padding:0;overflow-x:hidden;-webkit-tap-highlight-color:transparent;">
-    <script>
-      /* =========================================================
-   ARJUN CRICKET CONFIG
-   ========================================================= */
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>
+    ARJUN CRICKET — Live
+  </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&amp;family=Manrope:wght@400;600;700;800;900&amp;family=Space+Grotesk:wght@500;700;800;900&amp;family=Syne:wght@700;800;900&amp;display=swap" rel="stylesheet" />
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-touch-callout: none !important;
+      outline: none !important;
+    }
+  </style>
+</head>
+<body style="background-color:#050a0f;color:#fff;margin:0;padding:0;overflow-x:hidden;-webkit-tap-highlight-color:transparent;">
+  <script>
+    /* =========================================================
+       ARJUN CRICKET CONFIG
+       ========================================================= */
+    window.CricConfig = {
+      sourceUrl: "https://allrounderid2.pages.dev/id.json",
+      telegramLink: "https://t.me/arjuncricket18",
+      previewDuration: 10000,
+      /* Channel logos */
+      starLogo: "https://imgs.search.brave.com/wwDVnaXzqoCR-Bho0gu5YU3tfThVvzb-hpdYLapatZE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9sb2dv/ZGl4LmNvbS9sb2dv/Lzk0Nzc3Ni5qcGc",
+      sonyLogo: "https://imgs.search.brave.com/bXKRGBbwSsMRgzwLUP1oIsYXAltL3qP5Zbfv8D5PsNY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy8y/LzIzL1NvbnlfU3Bv/cnRzX05ldHdvcmtf/TG9nby5wbmc"
+    };
 
-window.CricConfig = {
-
-    sourceUrl:
-        &#34;https://allrounderid2.pages.dev/id.json&#34;,
-
-    telegramLink:
-        &#34;https://t.me/ARJUNCRICKET18;,
-
-    previewDuration:
-        10000,
-
-    /* Channel logos */
-
-    starLogo:
-        &#34;https://imgs.search.brave.com/wwDVnaXzqoCR-Bho0gu5YU3tfThVvzb-hpdYLapatZE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9sb2dv/ZGl4LmNvbS9sb2dv/Lzk0Nzc3Ni5qcGc&#34;,
-
-    sonyLogo:
-        &#34;https://imgs.search.brave.com/bXKRGBbwSsMRgzwLUP1oIsYXAltL3qP5Zbfv8D5PsNY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy8y/LzIzL1NvbnlfU3Bv/cnRzX05ldHdvcmtf/TG9nby5wbmc&#34;
-
-};
-
-
-/* =========================================================
-   ARJUN CRICKET
-   ========================================================= */
-
-class CricXCrateUI extends HTMLElement {
-
-    constructor() {
-
+    /* =========================================================
+       ARJUN CRICKET UI
+       ========================================================= */
+    class CricXCrateUI extends HTMLElement {
+      constructor() {
         super();
-
-        this.shadow =
-            this.attachShadow({
-                mode: &#34;closed&#34;
-            });
-
+        this.shadow = this.attachShadow({ mode: "closed" });
         this.masterChannels = [];
-
         this.currentStreamId = null;
-
         this.isUnlocked = false;
-
         this.lockTimer = null;
-
         this.stars = [];
-
         this.animationFrameId = null;
-
         this.laterCount = 0;
-
-
-        this.initialPendingId =
-            new URLSearchParams(
-                window.location.search
-            ).get(&#34;id&#34;);
-
+        this.initialPendingId = new URLSearchParams(window.location.search).get("id");
 
         this.shadow.innerHTML = `
-
-&lt;style&gt;
-
+<style>
 /* =========================================================
-   VARIABLES
-   ========================================================= */
-
+VARIABLES
+========================================================= */
 :root {
-
-    --primary-rgb: 0, 255, 204;
-
-    --accent:
-        rgb(var(--primary-rgb));
-
-    --accent-glow:
-        rgba(var(--primary-rgb), 0.45);
-
-    --accent-glow-intense:
-        rgba(var(--primary-rgb), 0.85);
-
-    --bg-pure:
-        #050a0f;
-
-    --bg-card:
-        rgba(12, 18, 28, 0.88);
-
-    --border-glass:
-        rgba(0, 255, 204, 0.18);
-
-    --border-glass-bright:
-        rgba(0, 255, 204, 0.4);
-
-    --heading-dynamic:
-        #ffffff;
-
-    --text-main:
-        #e0f2f1;
-
-    --text-muted:
-        #78909c;
-
-    --text-dark:
-        #455a64;
-
-    --btn-main-bg:
-        #ffffff;
-
-    --btn-main-text:
-        #050a0f;
-
-    --player-shadow:
-        0 45px 120px -20px
-        rgba(0, 255, 204, 0.25);
+  --primary-rgb: 0, 255, 204;
+  --accent: rgb(var(--primary-rgb));
+  --accent-glow: rgba(var(--primary-rgb), 0.45);
+  --accent-glow-intense: rgba(var(--primary-rgb), 0.85);
+  --bg-pure: #050a0f;
+  --bg-card: rgba(12, 18, 28, 0.88);
+  --border-glass: rgba(0, 255, 204, 0.18);
+  --border-glass-bright: rgba(0, 255, 204, 0.4);
+  --heading-dynamic: #ffffff;
+  --text-main: #e0f2f1;
+  --text-muted: #78909c;
+  --text-dark: #455a64;
+  --btn-main-bg: #ffffff;
+  --btn-main-text: #050a0f;
+  --player-shadow: 0 45px 120px -20px rgba(0, 255, 204, 0.25);
 }
 
-
 /* =========================================================
-   LIGHT THEME
-   ========================================================= */
-
-:host([data-theme=&#34;light&#34;]) {
-
-    --primary-rgb:
-        0, 200, 180;
-
-    --accent:
-        #00c8b4;
-
-    --accent-glow:
-        rgba(0, 200, 180, 0.35);
-
-    --bg-pure:
-        #f0f7f7;
-
-    --bg-card:
-        rgba(255, 255, 255, 0.95);
-
-    --border-glass:
-        rgba(0, 0, 0, 0.1);
-
-    --border-glass-bright:
-        rgba(0, 0, 0, 0.25);
-
-    --heading-dynamic:
-        #000000;
-
-    --text-main:
-        #0a0f12;
-
-    --text-muted:
-        #546e7a;
-
-    --text-dark:
-        #90a4ae;
-
-    --btn-main-bg:
-        #091015;
-
-    --btn-main-text:
-        #ffffff;
+LIGHT THEME
+========================================================= */
+:host([data-theme="light"]) {
+  --primary-rgb: 0, 200, 180;
+  --accent: #00c8b4;
+  --accent-glow: rgba(0, 200, 180, 0.35);
+  --bg-pure: #f0f7f7;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --border-glass: rgba(0, 0, 0, 0.1);
+  --border-glass-bright: rgba(0, 0, 0, 0.25);
+  --heading-dynamic: #000000;
+  --text-main: #0a0f12;
+  --text-muted: #546e7a;
+  --text-dark: #90a4ae;
+  --btn-main-bg: #091015;
+  --btn-main-text: #ffffff;
 }
 
-
 /* =========================================================
-   GLOBAL
-   ========================================================= */
-
+GLOBAL
+========================================================= */
 *,
 *::before,
 *::after {
-
-    box-sizing: border-box;
-
-    margin: 0;
-
-    padding: 0;
-
-    -webkit-tap-highlight-color: transparent;
-
-    -webkit-touch-callout: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
-
 
 :host {
-
-    display: block;
-
-    width: 100%;
-
-    min-height: 100vh;
-
-    background:
-        var(--bg-pure);
-
-    color:
-        var(--text-main);
-
-    font-family:
-        &#34;Manrope&#34;,
-        sans-serif;
-
-    position: relative;
-
-    -webkit-tap-highlight-color: transparent;
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-pure);
+  color: var(--text-main);
+  font-family: "Manrope", sans-serif;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
-
 
 /* =========================================================
-   BACKGROUND
-   ========================================================= */
-
+BACKGROUND
+========================================================= */
 canvas#warpGridCanvas {
-
-    position: fixed;
-
-    inset: 0;
-
-    width: 100vw;
-
-    height: 100vh;
-
-    pointer-events: none;
-
-    z-index: 0;
-
-    opacity: 0.85;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
 }
-
 
 .container {
-
-    width:
-        min(1500px, 92vw);
-
-    margin:
-        0 auto;
-
-    padding:
-        0 0
-        clamp(40px, 6vw, 100px);
-
-    position: relative;
-
-    z-index: 10;
+  width: min(1500px, 92vw);
+  margin: 0 auto;
+  padding: 0 0 clamp(40px, 6vw, 100px);
+  position: relative;
+  z-index: 10;
 }
-
 
 /* =========================================================
-   NAVIGATION
-   ========================================================= */
-
+NAVIGATION
+========================================================= */
 .nav {
-
-    height:
-        clamp(64px, 8.5vh, 96px);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    position: relative;
-
-    z-index: 50;
+  height: clamp(64px, 8.5vh, 96px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 50;
 }
-
 
 .brand {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 12px;
-
-    text-decoration: none;
-
-    cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
 }
-
 
 .brand-title {
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size:
-        clamp(20px, 2.2vw, 28px);
-
-    font-weight: 900;
-
-    letter-spacing: 1px;
-
-    text-transform: uppercase;
-
-    color:
-        var(--heading-dynamic);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--heading-dynamic);
 }
-
 
 .nav-actions {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-
 
 .live-pill-badge {
-
-    height: 38px;
-
-    padding:
-        0 14px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    background:
-        var(--bg-card);
-
-    border:
-        1px solid
-        var(--border-glass);
-
-    backdrop-filter:
-        blur(16px);
-
-    border-radius:
-        100px;
-
-    color:
-        var(--text-muted);
-
-    font-family:
-        &#34;DM Mono&#34;,
-        monospace;
-
-    font-size: 9px;
-
-    letter-spacing: 1.2px;
-
-    text-transform: uppercase;
+  height: 38px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(16px);
+  border-radius: 100px;
+  color: var(--text-muted);
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
 }
-
 
 .pulsing-live-dot {
-
-    width: 6px;
-
-    height: 6px;
-
-    background:
-        #ff2a2a;
-
-    border-radius:
-        50%;
-
-    box-shadow:
-        0 0 12px
-        #ff2a2a;
-
-    animation:
-        liveSignal 1.5s
-        ease-in-out
-        infinite;
+  width: 6px;
+  height: 6px;
+  background: #ff2a2a;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #ff2a2a;
+  animation: liveSignal 1.5s ease-in-out infinite;
 }
-
 
 @keyframes liveSignal {
-
-    0%,
-    100% {
-
-        opacity: 1;
-
-        transform:
-            scale(1);
-    }
-
-    50% {
-
-        opacity: 0.35;
-
-        transform:
-            scale(0.8);
-    }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
 }
-
 
 .nav-join-btn {
-
-    height: 38px;
-
-    padding:
-        0 20px;
-
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius:
-        100px;
-
-    background:
-        var(--btn-main-bg);
-
-    color:
-        var(--btn-main-text);
-
-    text-decoration: none;
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size: 12px;
-
-    font-weight: 800;
-
-    letter-spacing: 1px;
-
-    transition:
-        all 0.3s
-        cubic-bezier(
-            0.16,
-            1,
-            0.3,
-            1
-        );
+  height: 38px;
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  background: var(--btn-main-bg);
+  color: var(--btn-main-text);
+  text-decoration: none;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 
 .nav-join-btn:hover {
-
-    background:
-        var(--accent);
-
-    color:
-        #000;
-
-    box-shadow:
-        0 0 20px
-        var(--accent-glow);
-
-    transform:
-        translateY(-2px);
+  background: var(--accent);
+  color: #000;
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: translateY(-2px);
 }
-
 
 /* =========================================================
-   HERO
-   ========================================================= */
-
+HERO
+========================================================= */
 .hero {
-
-    position: relative;
-
-    padding:
-        clamp(20px, 3.5vw, 56px)
-        0
-        clamp(14px, 2.2vw, 36px);
+  position: relative;
+  padding: clamp(20px, 3.5vw, 56px) 0 clamp(14px, 2.2vw, 36px);
 }
-
 
 .hero-tag {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    color:
-        var(--accent);
-
-    font-size: 14px;
-
-    font-weight: 800;
-
-    letter-spacing: 3px;
-
-    text-transform:
-        uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
-
 
 .hero-tag::before {
-
-    content: &#34;&#34;;
-
-    width: 28px;
-
-    height: 2px;
-
-    background:
-        var(--accent);
-
-    border-radius: 2px;
+  content: "";
+  width: 28px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
 }
-
 
 .hero-headline {
-
-    margin-top: 12px;
-
-    font-family:
-        &#34;Syne&#34;,
-        sans-serif;
-
-    font-size:
-        clamp(
-            36px,
-            7.5vw,
-            92px
-        );
-
-    line-height: 0.88;
-
-    letter-spacing:
-        -0.06em;
-
-    font-weight: 900;
-
-    text-transform:
-        uppercase;
+  margin-top: 12px;
+  font-family: "Syne", sans-serif;
+  font-size: clamp(36px, 7.5vw, 92px);
+  line-height: 0.88;
+  letter-spacing: -0.06em;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-
-.hero-headline
-.accent-txt {
-
-    color:
-        var(--accent);
-
-    background:
-        linear-gradient(
-            135deg,
-            #00ffcc 0%,
-            #0096ff 100%
-        );
-
-    -webkit-background-clip:
-        text;
-
-    -webkit-text-fill-color:
-        transparent;
+.hero-headline .accent-txt {
+  color: var(--accent);
+  background: linear-gradient(135deg, #00ffcc 0%, #0096ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-
 
 .hero-details {
-
-    margin-top: 16px;
-
-    display: flex;
-
-    align-items: center;
-
-    flex-wrap: wrap;
-
-    gap: 10px;
-
-    color:
-        var(--text-muted);
-
-    font-family:
-        &#34;DM Mono&#34;,
-        monospace;
-
-    font-size: 9px;
-
-    letter-spacing: 1.4px;
-
-    text-transform:
-        uppercase;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--text-muted);
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
 }
-
 
 .hero-details b {
-
-    color:
-        var(--text-main);
-
-    font-weight: 600;
+  color: var(--text-main);
+  font-weight: 600;
 }
-
 
 .meta-separator {
-
-    width: 3px;
-
-    height: 3px;
-
-    border-radius:
-        50%;
-
-    background:
-        var(--text-dark);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-dark);
 }
-
 
 .track-separator-beam {
-
-    width: 100%;
-
-    height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            var(--accent) 0%,
-            var(--border-glass) 45%,
-            transparent 100%
-        );
-
-    margin-bottom: 24px;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--border-glass) 45%, transparent 100%);
+  margin-bottom: 24px;
 }
-
 
 /* =========================================================
-   CHANNEL GRID
-   ========================================================= */
-
+CHANNEL GRID
+========================================================= */
 .channels-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(
-                260px,
-                1fr
-            )
-        );
-
-    gap: 24px;
-
-    margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
 }
-
 
 .channel-card {
-
-    background:
-        var(--bg-card);
-
-    border-radius:
-        18px;
-
-    overflow:
-        hidden;
-
-    cursor:
-        pointer;
-
-    border:
-        1px solid
-        var(--border-glass);
-
-    transition:
-        all 0.4s
-        cubic-bezier(
-            0.16,
-            1,
-            0.3,
-            1
-        );
-
-    position:
-        relative;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    backdrop-filter:
-        blur(20px);
+  background: var(--bg-card);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--border-glass);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(20px);
 }
-
 
 .channel-card:hover {
-
-    transform:
-        translateY(-8px)
-        scale(1.02);
-
-    border-color:
-        var(--accent);
-
-    box-shadow:
-        0 25px 50px -12px
-        rgba(0, 0, 0, 0.7),
-
-        0 0 25px
-        var(--accent-glow);
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--accent);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 25px var(--accent-glow);
 }
 
-
 /* =========================================================
-   THUMBNAIL
-   ========================================================= */
-
+THUMBNAIL
+========================================================= */
 .card-thumbnail {
-
-    width: 100%;
-
-    height: 155px;
-
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(
-                12,
-                22,
-                35,
-                0.9
-            ) 0%,
-
-            rgba(
-                3,
-                7,
-                12,
-                0.98
-            ) 100%
-        );
-
-    background-size:
-        cover;
-
-    background-position:
-        center;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    position:
-        relative;
-
-    overflow:
-        hidden;
-
-    border-bottom:
-        1px solid
-        var(--border-glass);
+  width: 100%;
+  height: 155px;
+  background: radial-gradient(circle at center, rgba(12, 22, 35, 0.9) 0%, rgba(3, 7, 12, 0.98) 100%);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-glass);
 }
-
 
 /* =========================================================
-   CHANNEL LOGO
-   ========================================================= */
-
+CHANNEL LOGO
+========================================================= */
 .channel-logo-box {
-
-    width: 82px;
-
-    height: 82px;
-
-    border-radius: 18px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.96
-        );
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.25
-        );
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    padding: 10px;
-
-    box-shadow:
-        0 10px 30px
-        rgba(
-            0,
-            0,
-            0,
-            0.5
-        );
-
-    z-index: 2;
-
-    transition:
-        transform 0.3s ease;
+  width: 82px;
+  height: 82px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  transition: transform 0.3s ease;
 }
 
-
-.channel-card:hover
-.channel-logo-box {
-
-    transform:
-        scale(1.1)
-        rotate(3deg);
+.channel-card:hover .channel-logo-box {
+  transform: scale(1.1) rotate(3deg);
 }
-
 
 .channel-logo {
-
-    display: block;
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: contain;
-
-    border-radius: 10px;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
 }
-
 
 /* =========================================================
-   GENERIC BADGE
-   ========================================================= */
-
+GENERIC BADGE
+========================================================= */
 .channel-badge-box {
-
-    width: 56px;
-
-    height: 56px;
-
-    border-radius: 16px;
-
-    background:
-        rgba(
-            15,
-            25,
-            40,
-            0.9
-        );
-
-    border:
-        1px solid
-        var(--border-glass-bright);
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    box-shadow:
-        0 8px 25px
-        rgba(
-            0,
-            0,
-            0,
-            0.5
-        );
-
-    z-index: 2;
-
-    transition:
-        transform 0.3s ease;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(15, 25, 40, 0.9);
+  border: 1px solid var(--border-glass-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  transition: transform 0.3s ease;
 }
 
-
-.channel-card:hover
-.channel-badge-box {
-
-    transform:
-        scale(1.1)
-        rotate(5deg);
+.channel-card:hover .channel-badge-box {
+  transform: scale(1.1) rotate(5deg);
 }
-
 
 .channel-badge-box svg {
-
-    width: 26px;
-
-    height: 26px;
-
-    fill:
-        var(--accent);
+  width: 26px;
+  height: 26px;
+  fill: var(--accent);
 }
-
 
 .card-network-tag {
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size: 13px;
-
-    font-weight: 800;
-
-    color: #fff;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing: 2px;
-
-    margin-top: 10px;
-
-    z-index: 2;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 10px;
+  z-index: 2;
 }
-
 
 /* =========================================================
-   PLAY ICON
-   ========================================================= */
-
+PLAY ICON
+========================================================= */
 .play-overlay-icon {
-
-    position: absolute;
-
-    width: 52px;
-
-    height: 52px;
-
-    background:
-        var(--accent);
-
-    border-radius:
-        50%;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    opacity: 0;
-
-    transform:
-        scale(0.6);
-
-    transition:
-        all 0.35s
-        cubic-bezier(
-            0.16,
-            1,
-            0.3,
-            1
-        );
-
-    box-shadow:
-        0 10px 30px
-        var(--accent-glow-intense);
-
-    z-index: 5;
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px var(--accent-glow-intense);
+  z-index: 5;
 }
 
-
-.channel-card:hover
-.play-overlay-icon {
-
-    opacity: 1;
-
-    transform:
-        scale(1);
+.channel-card:hover .play-overlay-icon {
+  opacity: 1;
+  transform: scale(1);
 }
-
 
 .play-overlay-icon svg {
-
-    width: 22px;
-
-    height: 22px;
-
-    fill: #000;
-
-    margin-left: 3px;
+  width: 22px;
+  height: 22px;
+  fill: #000;
+  margin-left: 3px;
 }
-
 
 /* =========================================================
-   CARD BODY
-   ========================================================= */
-
+CARD BODY
+========================================================= */
 .card-body {
-
-    padding: 18px;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    gap: 8px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-
 
 .card-title {
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size: 16px;
-
-    font-weight: 700;
-
-    color:
-        var(--text-main);
-
-    white-space:
-        nowrap;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 
 .card-meta {
-
-    font-size: 11px;
-
-    color:
-        var(--text-muted);
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    font-family:
-        &#34;DM Mono&#34;,
-        monospace;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing: 1px;
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "DM Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-
 
 /* =========================================================
-   VIEWS
-   ========================================================= */
-
+VIEWS
+========================================================= */
 .view-section {
-
-    display:
-        none;
+  display: none;
 }
-
 
 .view-section.active {
-
-    display:
-        block;
-
-    animation:
-        fadeInView
-        0.4s
-        ease
-        forwards;
+  display: block;
+  animation: fadeInView 0.4s ease forwards;
 }
-
 
 @keyframes fadeInView {
-
-    from {
-
-        opacity: 0;
-
-        transform:
-            translateY(10px);
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform:
-            translateY(0);
-    }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 
 /* =========================================================
-   PLAYER
-   ========================================================= */
-
+PLAYER
+========================================================= */
 .player-top-nav {
-
-    margin-bottom:
-        16px;
+  margin-bottom: 16px;
 }
-
 
 .back-home-btn {
-
-    background:
-        var(--bg-card);
-
-    border:
-        1px solid
-        var(--border-glass-bright);
-
-    color:
-        var(--text-main);
-
-    padding:
-        10px 22px;
-
-    border-radius:
-        100px;
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-    cursor:
-        pointer;
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    gap: 8px;
-
-    backdrop-filter:
-        blur(16px);
-
-    transition:
-        all 0.3s ease;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass-bright);
+  color: var(--text-main);
+  padding: 10px 22px;
+  border-radius: 100px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(16px);
+  transition: all 0.3s ease;
 }
-
 
 .back-home-btn:hover {
-
-    background:
-        var(--accent);
-
-    color:
-        #000;
-
-    box-shadow:
-        0 0 25px
-        var(--accent-glow);
-
-    transform:
-        translateX(-4px);
+  background: var(--accent);
+  color: #000;
+  box-shadow: 0 0 25px var(--accent-glow);
+  transform: translateX(-4px);
 }
-
 
 .player-rig-box {
-
-    width: 100%;
-
-    aspect-ratio:
-        16 / 9;
-
-    position:
-        relative;
-
-    background:
-        #000;
-
-    overflow:
-        hidden;
-
-    border-radius:
-        24px;
-
-    border:
-        1px solid
-        var(--border-glass-bright);
-
-    box-shadow:
-        var(--player-shadow);
-
-    isolation:
-        isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  background: #000;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--border-glass-bright);
+  box-shadow: var(--player-shadow);
+  isolation: isolate;
 }
 
-
-
 .stream-loading-overlay {
-
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 10;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 16px;
-
-    background: #000;
-
-    color: var(--text-muted);
-
-    font-family: &#34;DM Mono&#34;, monospace;
-
-    font-size: 12px;
-
-    letter-spacing: 1px;
-
-    text-transform: uppercase;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #000;
+  color: var(--text-muted);
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .stream-loading-overlay.hidden {
-
-    display: none;
+  display: none;
 }
 
 iframe#player {
-
-    width: 100%;
-
-    height: 100%;
-
-    border: none;
-
-    display: block;
-
-    position: relative;
-
-    z-index: 5;
-
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  position: relative;
+  z-index: 5;
+  object-fit: cover;
 }
-
 
 .player-rig-box.fs-active {
-
-    position:
-        fixed !important;
-
-    inset:
-        0 !important;
-
-    width:
-        100vw !important;
-
-    height:
-        100vh !important;
-
-    z-index:
-        9999999 !important;
-
-    border-radius:
-        0 !important;
-
-    border:
-        none !important;
-
-    background:
-        #000 !important;
-
-    display:
-        flex !important;
-
-    align-items:
-        center !important;
-
-    justify-content:
-        center !important;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999999 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  background: #000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-
-.player-rig-box.fs-active
-iframe#player {
-
-    width:
-        100vw !important;
-
-    height:
-        100vh !important;
-
-    object-fit:
-        fill !important;
+.player-rig-box.fs-active iframe#player {
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: fill !important;
 }
-
 
 .blended-fs-btn {
-
-    position:
-        absolute;
-
-    bottom:
-        14px;
-
-    right:
-        14px;
-
-    z-index:
-        30;
-
-    width:
-        38px;
-
-    height:
-        38px;
-
-    background:
-        rgba(
-            20,
-            20,
-            20,
-            0.65
-        );
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.15
-        );
-
-    border-radius:
-        4px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    cursor:
-        pointer;
-
-    transition:
-        all 0.2s ease;
-
-    backdrop-filter:
-        blur(4px);
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  z-index: 30;
+  width: 38px;
+  height: 38px;
+  background: rgba(20, 20, 20, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
 }
-
 
 .blended-fs-btn:hover {
-
-    background:
-        var(--accent);
-
-    border-color:
-        var(--accent);
-
-    transform:
-        scale(1.08);
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.08);
 }
-
 
 .blended-fs-btn svg {
-
-    width:
-        16px;
-
-    height:
-        16px;
-
-    fill:
-        #fff;
+  width: 16px;
+  height: 16px;
+  fill: #fff;
 }
-
 
 /* =========================================================
-   PLAYER META
-   ========================================================= */
-
+PLAYER META
+========================================================= */
 .player-meta-bar {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        14px;
-
-    padding-top:
-        20px;
-
-    flex-wrap:
-        wrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 20px;
+  flex-wrap: wrap;
 }
-
 
 .stream-title-group strong {
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size:
-        20px;
-
-    font-weight:
-        700;
-
-    display:
-        block;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  display: block;
 }
-
 
 .stream-title-group span {
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    color:
-        var(--text-muted);
-
-    font-size:
-        10px;
-
-    letter-spacing:
-        1.2px;
-
-    text-transform:
-        uppercase;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
 }
-
 
 .share-action-btn {
-
-    height:
-        44px;
-
-    padding:
-        0 24px;
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-    border-radius:
-        100px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--bg-card) 0%,
-            rgba(
-                0,
-                255,
-                204,
-                0.16
-            ) 100%
-        );
-
-    border:
-        1px solid
-        var(--accent);
-
-    color:
-        var(--text-main);
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size:
-        11px;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        1.5px;
-
-    text-transform:
-        uppercase;
-
-    cursor:
-        pointer;
-
-    transition:
-        all 0.3s ease;
+  height: 44px;
+  padding: 0 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 255, 204, 0.16) 100%);
+  border: 1px solid var(--accent);
+  color: var(--text-main);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-
 
 .share-action-btn:hover {
-
-    background:
-        var(--accent);
-
-    color:
-        #000;
+  background: var(--accent);
+  color: #000;
 }
-
 
 /* =========================================================
-   TELEGRAM MODAL
-   ========================================================= */
-
+TELEGRAM MODAL
+========================================================= */
 .tg-modal-overlay {
-
-    position:
-        fixed;
-
-    inset:
-        0;
-
-    background:
-        rgba(
-            3,
-            7,
-            12,
-            0.95
-        );
-
-    backdrop-filter:
-        blur(20px);
-
-    z-index:
-        999999;
-
-    display:
-        flex;
-
-    justify-content:
-        center;
-
-    align-items:
-        center;
-
-    opacity:
-        0;
-
-    pointer-events:
-        none;
-
-    transition:
-        opacity 1.5s
-        cubic-bezier(
-            0.16,
-            1,
-            0.3,
-            1
-        );
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 12, 0.95);
+  backdrop-filter: blur(20px);
+  z-index: 999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 
 .tg-modal-overlay.show {
-
-    opacity:
-        1;
-
-    pointer-events:
-        all;
+  opacity: 1;
+  pointer-events: all;
 }
-
 
 .tg-modal-box {
-
-    position:
-        relative;
-
-    background:
-        var(--bg-card);
-
-    border-radius:
-        22px;
-
-    padding:
-        32px 28px;
-
-    text-align:
-        center;
-
-    max-width:
-        390px;
-
-    width:
-        90%;
-
-    box-shadow:
-        0 40px 90px
-        rgba(
-            0,
-            0,
-            0,
-            0.9
-        ),
-
-        0 0 40px
-        var(--accent-glow);
-
-    transform:
-        scale(0.85);
-
-    transition:
-        transform 1.5s
-        cubic-bezier(
-            0.16,
-            1,
-            0.3,
-            1
-        );
-
-    backdrop-filter:
-        blur(24px);
-
-    overflow:
-        hidden;
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 22px;
+  padding: 32px 28px;
+  text-align: center;
+  max-width: 390px;
+  width: 90%;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.9), 0 0 40px var(--accent-glow);
+  transform: scale(0.85);
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(24px);
+  overflow: hidden;
 }
-
 
 .tg-modal-box::before {
-
-    content:
-        &#34;&#34;;
-
-    position:
-        absolute;
-
-    inset:
-        -2px;
-
-    border-radius:
-        24px;
-
-    background:
-        conic-gradient(
-            from 0deg at 50% 50%,
-            transparent 0%,
-            transparent 70%,
-            var(--accent) 90%,
-            #ffffff 100%
-        );
-
-    animation:
-        borderSpin 3s
-        linear infinite;
-
-    z-index:
-        -1;
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 24px;
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0%, transparent 70%, var(--accent) 90%, #ffffff 100%);
+  animation: borderSpin 3s linear infinite;
+  z-index: -1;
 }
-
 
 .tg-modal-box::after {
-
-    content:
-        &#34;&#34;;
-
-    position:
-        absolute;
-
-    inset:
-        1px;
-
-    border-radius:
-        21px;
-
-    background:
-        #0c121c;
-
-    z-index:
-        -1;
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 21px;
+  background: #0c121c;
+  z-index: -1;
 }
-
 
 @keyframes borderSpin {
-
-    0% {
-
-        transform:
-            rotate(0deg);
-    }
-
-    100% {
-
-        transform:
-            rotate(360deg);
-    }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-
-.tg-modal-overlay.show
-.tg-modal-box {
-
-    transform:
-        scale(1);
+.tg-modal-overlay.show .tg-modal-box {
+  transform: scale(1);
 }
-
 
 .tg-modal-title {
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size:
-        22px;
-
-    font-weight:
-        900;
-
-    color:
-        var(--heading-dynamic);
-
-    margin-bottom:
-        8px;
-
-    letter-spacing:
-        0.5px;
-
-    text-transform:
-        uppercase;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--heading-dynamic);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
-
 
 .tg-modal-desc {
-
-    font-size:
-        13.5px;
-
-    color:
-        var(--text-muted);
-
-    line-height:
-        1.6;
-
-    margin-bottom:
-        24px;
-
-    font-family:
-        &#34;Manrope&#34;,
-        sans-serif;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+  font-family: "Manrope", sans-serif;
 }
-
 
 .tg-modal-actions {
-
-    display:
-        flex;
-
-    gap:
-        12px;
-
-    justify-content:
-        center;
-
-    align-items:
-        center;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
 }
-
 
 .tg-modal-btn-later {
-
-    flex:
-        1;
-
-    height:
-        46px;
-
-    border-radius:
-        12px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.05
-        );
-
-    color:
-        var(--text-main);
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size:
-        13px;
-
-    font-weight:
-        800;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        0.5px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    cursor:
-        pointer;
-
-    transition:
-        all 0.3s ease;
-
-    border:
-        1px solid
-        var(--border-glass);
+  flex: 1;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-glass);
 }
-
 
 .tg-modal-btn-later:hover {
-
-    background:
-        var(--border-glass-bright);
-
-    color:
-        #fff;
-
-    transform:
-        translateY(-2px);
+  background: var(--border-glass-bright);
+  color: #fff;
+  transform: translateY(-2px);
 }
-
 
 .tg-modal-btn-join {
-
-    flex:
-        1;
-
-    height:
-        46px;
-
-    border-radius:
-        12px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #00ffcc 0%,
-            #0096ff 100%
-        );
-
-    color:
-        #000;
-
-    font-family:
-        &#34;Space Grotesk&#34;,
-        sans-serif;
-
-    font-size:
-        13px;
-
-    font-weight:
-        900;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        0.5px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    cursor:
-        pointer;
-
-    transition:
-        all 0.3s ease;
-
-    border:
-        none;
-
-    box-shadow:
-        0 8px 25px
-        var(--accent-glow);
+  flex: 1;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00ffcc 0%, #0096ff 100%);
+  color: #000;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 8px 25px var(--accent-glow);
 }
-
 
 .tg-modal-btn-join:hover {
-
-    filter:
-        brightness(1.1);
-
-    transform:
-        translateY(-2px);
+  filter: brightness(1.1);
+  transform: translateY(-2px);
 }
-
 
 /* =========================================================
-   THEME
-   ========================================================= */
-
+THEME
+========================================================= */
 .theme-switch-deck {
-
-    position:
-        fixed;
-
-    right:
-        20px;
-
-    bottom:
-        20px;
-
-    z-index:
-        900;
-
-    background:
-        var(--bg-card);
-
-    border:
-        1px solid
-        var(--border-glass-bright);
-
-    border-radius:
-        100px;
-
-    backdrop-filter:
-        blur(24px);
-
-    box-shadow:
-        0 20px 60px
-        rgba(
-            0,
-            0,
-            0,
-            0.45
-        );
-
-    padding:
-        5px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        4px;
-
-    transition:
-        transform 0.4s ease,
-        opacity 0.4s ease;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 900;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass-bright);
+  border-radius: 100px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
-
 
 .theme-switch-deck.hidden {
-
-    opacity:
-        0;
-
-    pointer-events:
-        none;
-
-    transform:
-        translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
 }
-
 
 .mode-toggle-btn {
-
-    height:
-        32px;
-
-    padding:
-        0 12px;
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    gap:
-        6px;
-
-    border:
-        0;
-
-    background:
-        transparent;
-
-    color:
-        var(--text-muted);
-
-    font-family:
-        &#34;DM Mono&#34;,
-        monospace;
-
-    font-size:
-        8px;
-
-    font-weight:
-        500;
-
-    letter-spacing:
-        1px;
-
-    text-transform:
-        uppercase;
-
-    border-radius:
-        100px;
-
-    cursor:
-        pointer;
-
-    transition:
-        all 0.3s ease;
+  height: 32px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: "DM Mono", monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-
 
 .mode-toggle-btn i {
-
-    width:
-        4px;
-
-    height:
-        4px;
-
-    border-radius:
-        50%;
-
-    background:
-        currentColor;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
 }
-
 
 .mode-toggle-btn.active {
-
-    background:
-        var(--accent);
-
-    color:
-        #000;
+  background: var(--accent);
+  color: #000;
 }
-
 
 /* =========================================================
-   STATES
-   ========================================================= */
-
+STATES
+========================================================= */
 .state-container {
-
-    grid-column:
-        1 / -1;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    padding:
-        100px 20px;
-
-    text-align:
-        center;
-
-    gap:
-        16px;
-
-    color:
-        var(--text-muted);
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+  text-align: center;
+  gap: 16px;
+  color: var(--text-muted);
 }
-
 
 .spinner {
-
-    width:
-        50px;
-
-    height:
-        50px;
-
-    border:
-        4px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.08
-        );
-
-    border-left-color:
-        var(--accent);
-
-    border-radius:
-        50%;
-
-    animation:
-        spin 0.9s
-        linear infinite;
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.08);
+  border-left-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
 }
-
 
 @keyframes spin {
-
-    0% {
-
-        transform:
-            rotate(0deg);
-    }
-
-    100% {
-
-        transform:
-            rotate(360deg);
-    }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
-
 
 /* =========================================================
-   MOBILE
-   ========================================================= */
-
+MOBILE
+========================================================= */
 @media (max-width: 600px) {
-
-    .container {
-
-        width:
-            92vw;
-    }
-
-
-    .live-pill-badge {
-
-        display:
-            none;
-    }
-
-
-    .nav-join-btn {
-
-        padding:
-            0 14px;
-
-        font-size:
-            10px;
-    }
-
-
-    .channels-grid {
-
-        grid-template-columns:
-            repeat(
-                auto-fill,
-                minmax(
-                    150px,
-                    1fr
-                )
-            );
-
-        gap:
-            12px;
-    }
-
-
-    .card-thumbnail {
-
-        height:
-            120px;
-    }
-
-
-    .channel-logo-box {
-
-        width:
-            65px;
-
-        height:
-            65px;
-
-        padding:
-            8px;
-
-        border-radius:
-            14px;
-    }
-
-
-    .card-body {
-
-        padding:
-            12px;
-    }
-
-
-    .card-title {
-
-        font-size:
-            13px;
-    }
-
-
-    .card-meta {
-
-        font-size:
-            8px;
-    }
-
-
-    .player-rig-box {
-
-        border-radius:
-            14px;
-    }
-
-
-    .player-meta-bar {
-
-        align-items:
-            flex-start;
-    }
-
-
-    .share-action-btn {
-
-        width:
-            100%;
-
-        justify-content:
-            center;
-    }
-
-
-    .theme-switch-deck {
-
-        right:
-            10px;
-
-        bottom:
-            10px;
-    }
-
+  .container { width: 92vw; }
+  .live-pill-badge { display: none; }
+  .nav-join-btn { padding: 0 14px; font-size: 10px; }
+  .channels-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .card-thumbnail { height: 120px; }
+  .channel-logo-box {
+    width: 65px;
+    height: 65px;
+    padding: 8px;
+    border-radius: 14px;
+  }
+  .card-body { padding: 12px; }
+  .card-title { font-size: 13px; }
+  .card-meta { font-size: 8px; }
+  .player-rig-box { border-radius: 14px; }
+  .player-meta-bar { align-items: flex-start; }
+  .share-action-btn { width: 100%; justify-content: center; }
+  .theme-switch-deck { right: 10px; bottom: 10px; }
 }
-
-&lt;/style&gt;
-
-
-&lt;!-- =====================================================
-     CANVAS
-     ===================================================== --&gt;
-
-&lt;canvas id=&#34;warpGridCanvas&#34;&gt;&lt;/canvas&gt;
-
-
-&lt;!-- =====================================================
-     MAIN
-     ===================================================== --&gt;
-
-&lt;div
-    class=&#34;container&#34;
-    id=&#34;mainContainer&#34;
-&gt;
-
-
-&lt;header class=&#34;nav&#34;&gt;
-
-    &lt;a
-        class=&#34;brand&#34;
-        id=&#34;brandHomeLink&#34;
-    &gt;
-
-        &lt;div class=&#34;brand-title&#34;&gt;
-            ARJUN CRICKET
-        &lt;/div&gt;
-
-    &lt;/a&gt;
-
-
-    &lt;div class=&#34;nav-actions&#34;&gt;
-
-        &lt;div class=&#34;live-pill-badge&#34;&gt;
-
-            &lt;i class=&#34;pulsing-live-dot&#34;&gt;&lt;/i&gt;
-
-            ON AIR
-
-        &lt;/div&gt;
-
-
-        &lt;a
-            class=&#34;nav-join-btn&#34;
-            id=&#34;navJoinBtn&#34;
-            href=&#34;#&#34;
-            target=&#34;_blank&#34;
-            rel=&#34;noopener&#34;
-        &gt;
-            JOIN TG
-        &lt;/a&gt;
-
-    &lt;/div&gt;
-
-&lt;/header&gt;
-
-
-&lt;!-- =====================================================
-     HOME
-     ===================================================== --&gt;
-
-&lt;div
-    id=&#34;home-view&#34;
-    class=&#34;view-section ${this.initialPendingId ? &#39;&#39; : &#39;active&#39;}&#34;
-&gt;
-
-    &lt;section class=&#34;hero&#34;&gt;
-
-        &lt;div class=&#34;hero-tag&#34;&gt;
-            LIVE BROADCASTS
-        &lt;/div&gt;
-
-
-        &lt;h1 class=&#34;hero-headline&#34;&gt;
-
-            SPORTS
-
-            &lt;br&gt;
-
-            &lt;span class=&#34;accent-txt&#34;&gt;
-                CHANNELS.
-            &lt;/span&gt;
-
-        &lt;/h1&gt;
-
-
-        &lt;div class=&#34;hero-details&#34;&gt;
-
-            &lt;b&gt;
-                MASTER DATABASE
-            &lt;/b&gt;
-
-            &lt;span class=&#34;meta-separator&#34;&gt;&lt;/span&gt;
-
-            ALL CHANNELS LIVE
-
-            &lt;span class=&#34;meta-separator&#34;&gt;&lt;/span&gt;
-
-            SELECT TO WATCH
-
-        &lt;/div&gt;
-
-    &lt;/section&gt;
-
-
-    &lt;div class=&#34;track-separator-beam&#34;&gt;&lt;/div&gt;
-
-
-    &lt;div
-        id=&#34;channels-grid&#34;
-        class=&#34;channels-grid&#34;
-    &gt;
-
-        &lt;div class=&#34;state-container&#34;&gt;
-
-            &lt;div class=&#34;spinner&#34;&gt;&lt;/div&gt;
-
-            &lt;p&gt;
-                Fetching professional sports feed...
-            &lt;/p&gt;
-
-        &lt;/div&gt;
-
-    &lt;/div&gt;
-
-&lt;/div&gt;
-
-
-&lt;!-- =====================================================
-     PLAYER
-     ===================================================== --&gt;
-
-&lt;div
-    id=&#34;player-view&#34;
-    class=&#34;view-section ${this.initialPendingId ? &#39;active&#39; : &#39;&#39;}&#34;
-&gt;
-
-
-    &lt;div class=&#34;player-top-nav&#34;&gt;
-
-        &lt;button
-            class=&#34;back-home-btn&#34;
-            id=&#34;backHomeBtn&#34;
-        &gt;
-            &amp;#8592; Back to Channels
-        &lt;/button&gt;
-
-    &lt;/div&gt;
-
-
-    &lt;div
-        class=&#34;player-rig-box&#34;
-        id=&#34;playerContainer&#34;
-    &gt;
-
-
-        &lt;div
-            class=&#34;stream-loading-overlay ${this.initialPendingId ? &#39;&#39; : &#39;hidden&#39;}&#34;
-            id=&#34;streamLoadingOverlay&#34;
-        &gt;
-
-            &lt;div class=&#34;spinner&#34;&gt;&lt;/div&gt;
-
-            &lt;span&gt;Connecting to stream...&lt;/span&gt;
-
-        &lt;/div&gt;
-
-        &lt;iframe
-            id=&#34;player&#34;
-            allow=&#34;
-                autoplay;
-                fullscreen;
-                encrypted-media;
-                picture-in-picture
-            &#34;
-            allowfullscreen=&#34;true&#34;
-        &gt;&lt;/iframe&gt;
-
-
-        &lt;button
-            class=&#34;blended-fs-btn&#34;
-            id=&#34;blendedFsBtn&#34;
-            title=&#34;Toggle Fullscreen&#34;
-        &gt;
-
-            &lt;svg
-                id=&#34;fsIconSvg&#34;
-                viewBox=&#34;0 0 24 24&#34;
-            &gt;
-
-                &lt;path
-                    d=&#34;
-                    M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12
-                    7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z
-                    &#34;
-                /&gt;
-
-            &lt;/svg&gt;
-
-        &lt;/button&gt;
-
-    &lt;/div&gt;
-
-
-    &lt;div class=&#34;player-meta-bar&#34;&gt;
-
-        &lt;div class=&#34;stream-title-group&#34;&gt;
-
-            &lt;strong
-                id=&#34;activeStreamTitleDisplay&#34;
-            &gt;
-                Live Broadcast
-            &lt;/strong&gt;
-
-            &lt;span&gt;
-                SHANAEDITX High-Definition Stream
-            &lt;/span&gt;
-
-        &lt;/div&gt;
-
-
-        &lt;button
-            class=&#34;share-action-btn&#34;
-            id=&#34;btnShare&#34;
-        &gt;
-
-            &lt;svg
-                width=&#34;14&#34;
-                height=&#34;14&#34;
-                viewBox=&#34;0 0 24 24&#34;
-                fill=&#34;none&#34;
-                stroke=&#34;currentColor&#34;
-                stroke-width=&#34;2.2&#34;
-            &gt;
-
-                &lt;line
-                    x1=&#34;7&#34;
-                    y1=&#34;17&#34;
-                    x2=&#34;17&#34;
-                    y2=&#34;7&#34;
-                &gt;&lt;/line&gt;
-
-                &lt;polyline
-                    points=&#34;
-                    7 7
-                    17 7
-                    17 17
-                    &#34;
-                &gt;&lt;/polyline&gt;
-
-            &lt;/svg&gt;
-
-
-            &lt;span id=&#34;shareBtnText&#34;&gt;
-                SHARE STREAM
-            &lt;/span&gt;
-
-        &lt;/button&gt;
-
-    &lt;/div&gt;
-
-&lt;/div&gt;
-
-&lt;/div&gt;
-
-
-&lt;!-- =====================================================
-     TELEGRAM MODAL
-     ===================================================== --&gt;
-
-&lt;div
-    class=&#34;tg-modal-overlay&#34;
-    id=&#34;tgPremiumModal&#34;
-&gt;
-
-    &lt;div class=&#34;tg-modal-box&#34;&gt;
-
-        &lt;h3 class=&#34;tg-modal-title&#34;&gt;
-            SHANAEDITX
-        &lt;/h3&gt;
-
-
-        &lt;p
-            class=&#34;tg-modal-desc&#34;
-            id=&#34;tgModalDesc&#34;
-        &gt;
-            Join our Telegram for more stream links and updates.
-        &lt;/p&gt;
-
-
-        &lt;div class=&#34;tg-modal-actions&#34;&gt;
-
-            &lt;div
-                class=&#34;tg-modal-btn-later&#34;
-                id=&#34;tgLaterModalBtn&#34;
-            &gt;
-                Later
-            &lt;/div&gt;
-
-
-            &lt;div
-                class=&#34;tg-modal-btn-join&#34;
-                id=&#34;tgJoinModalBtn&#34;
-            &gt;
-                Join Telegram
-            &lt;/div&gt;
-
-        &lt;/div&gt;
-
-    &lt;/div&gt;
-
-&lt;/div&gt;
-
-
-&lt;!-- =====================================================
-     THEME
-     ===================================================== --&gt;
-
-&lt;aside
-    class=&#34;theme-switch-deck&#34;
-    id=&#34;themeSwitchDeck&#34;
-&gt;
-
-    &lt;button
-        class=&#34;mode-toggle-btn active&#34;
-        id=&#34;themeDarkBtn&#34;
-    &gt;
-
-        &lt;i&gt;&lt;/i&gt;
-
-        Obsidian
-
-    &lt;/button&gt;
-
-
-    &lt;button
-        class=&#34;mode-toggle-btn&#34;
-        id=&#34;themeLightBtn&#34;
-    &gt;
-
-        &lt;i&gt;&lt;/i&gt;
-
-        Ceramic
-
-    &lt;/button&gt;
-
-&lt;/aside&gt;
-
+</style>
+
+<!-- =====================================================
+CANVAS
+===================================================== -->
+<canvas id="warpGridCanvas"></canvas>
+
+<!-- =====================================================
+MAIN
+===================================================== -->
+<div class="container" id="mainContainer">
+  <header class="nav">
+    <a class="brand" id="brandHomeLink">
+      <div class="brand-title">ARJUN CRICKET</div>
+    </a>
+    <div class="nav-actions">
+      <div class="live-pill-badge">
+        <i class="pulsing-live-dot"></i>
+        ON AIR
+      </div>
+      <a class="nav-join-btn" id="navJoinBtn" href="#" target="_blank" rel="noopener">
+        JOIN TG
+      </a>
+    </div>
+  </header>
+
+  <!-- =====================================================
+  HOME
+  ===================================================== -->
+  <div id="home-view" class="view-section ${this.initialPendingId ? '' : 'active'}">
+    <section class="hero">
+      <div class="hero-tag">LIVE BROADCASTS</div>
+      <h1 class="hero-headline">
+        SPORTS
+        <br>
+        <span class="accent-txt">CHANNELS.</span>
+      </h1>
+      <div class="hero-details">
+        <b>MASTER DATABASE</b>
+        <span class="meta-separator"></span>
+        ALL CHANNELS LIVE
+        <span class="meta-separator"></span>
+        SELECT TO WATCH
+      </div>
+    </section>
+    <div class="track-separator-beam"></div>
+    <div id="channels-grid" class="channels-grid">
+      <div class="state-container">
+        <div class="spinner"></div>
+        <p>Fetching professional sports feed...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+  PLAYER
+  ===================================================== -->
+  <div id="player-view" class="view-section ${this.initialPendingId ? 'active' : ''}">
+    <div class="player-top-nav">
+      <button class="back-home-btn" id="backHomeBtn">← Back to Channels</button>
+    </div>
+    <div class="player-rig-box" id="playerContainer">
+      <div class="stream-loading-overlay ${this.initialPendingId ? '' : 'hidden'}" id="streamLoadingOverlay">
+        <div class="spinner"></div>
+        <span>Connecting to stream...</span>
+      </div>
+      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen="true"></iframe>
+      <button class="blended-fs-btn" id="blendedFsBtn" title="Toggle Fullscreen">
+        <svg id="fsIconSvg" viewBox="0 0 24 24">
+          <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="player-meta-bar">
+      <div class="stream-title-group">
+        <strong id="activeStreamTitleDisplay">Live Broadcast</strong>
+        <span>ARJUN CRICKET High-Definition Stream</span>
+      </div>
+      <button class="share-action-btn" id="btnShare">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <line x1="7" y1="17" x2="17" y2="7"></line>
+          <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
+        <span id="shareBtnText">SHARE STREAM</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+TELEGRAM MODAL
+===================================================== -->
+<div class="tg-modal-overlay" id="tgPremiumModal">
+  <div class="tg-modal-box">
+    <h3 class="tg-modal-title">ARJUN CRICKET</h3>
+    <p class="tg-modal-desc" id="tgModalDesc">
+      Join our Telegram for more stream links and updates.
+    </p>
+    <div class="tg-modal-actions">
+      <div class="tg-modal-btn-later" id="tgLaterModalBtn">Later</div>
+      <div class="tg-modal-btn-join" id="tgJoinModalBtn">Join Telegram</div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+THEME
+===================================================== -->
+<aside class="theme-switch-deck" id="themeSwitchDeck">
+  <button class="mode-toggle-btn active" id="themeDarkBtn">
+    <i></i>
+    Obsidian
+  </button>
+  <button class="mode-toggle-btn" id="themeLightBtn">
+    <i></i>
+    Ceramic
+  </button>
+</aside>
 `;
+      }
 
-    }
-
-
-    /* =====================================================
-       CONNECTED
-       ===================================================== */
-
-    connectedCallback() {
-
-        this.shadow.querySelector(
-            &#34;#navJoinBtn&#34;
-        ).href =
-            window.CricConfig.telegramLink;
-
-
+      /* =====================================================
+         CONNECTED
+         ===================================================== */
+      connectedCallback() {
+        this.shadow.querySelector("#navJoinBtn").href = window.CricConfig.telegramLink;
         this.checkUnlockStatus();
-
         this.initWarpField();
-
         this.initEventListeners();
-
         this.setupMessageListener();
-
         this.fetchChannels();
+        window.addEventListener("popstate", () => this.handleUrlRouting());
+      }
 
-        window.addEventListener(
-            &#34;popstate&#34;,
-            () =&gt; this.handleUrlRouting()
-        );
-
-    }
-
-
-    disconnectedCallback() {
-
+      disconnectedCallback() {
         if (this.animationFrameId) {
-
-            cancelAnimationFrame(
-                this.animationFrameId
-            );
-
+          cancelAnimationFrame(this.animationFrameId);
         }
-
-
         if (this.lockTimer) {
-
-            clearTimeout(
-                this.lockTimer
-            );
-
+          clearTimeout(this.lockTimer);
         }
+      }
 
-    }
-
-
-    /* =====================================================
-       UNLOCK STATUS
-       ===================================================== */
-
-    checkUnlockStatus() {
-
-        const saved =
-            localStorage.getItem(
-                &#34;cricxcrate_unlocked_time&#34;
-            );
-
-
+      /* =====================================================
+         UNLOCK STATUS
+         ===================================================== */
+      checkUnlockStatus() {
+        const saved = localStorage.getItem("cricxcrate_unlocked_time");
         if (saved) {
-
-            if (
-
-                Date.now() -
-                parseInt(saved, 10)
-
-                &lt;
-
-                24 *
-                60 *
-                60 *
-                1000
-
-            ) {
-
-                this.isUnlocked =
-                    true;
-
-            } else {
-
-                localStorage.removeItem(
-                    &#34;cricxcrate_unlocked_time&#34;
-                );
-
-            }
-
+          if (Date.now() - parseInt(saved, 10) < 24 * 60 * 60 * 1000) {
+            this.isUnlocked = true;
+          } else {
+            localStorage.removeItem("cricxcrate_unlocked_time");
+          }
         }
-
-
         if (!this.isUnlocked) {
-
-            setTimeout(() =&gt; {
-
-                const desc =
-                    this.shadow.querySelector(
-                        &#34;#tgModalDesc&#34;
-                    );
-
-
-                const modal =
-                    this.shadow.querySelector(
-                        &#34;#tgPremiumModal&#34;
-                    );
-
-
-                if (desc) {
-
-                    desc.innerText =
-                        &#34;Join Our Telegram Channel For 24-Hour Full Access To Uninterrupted HD Live Streams And Updates.&#34;;
-
-                }
-
-
-                if (modal) {
-
-                    modal.classList.add(
-                        &#34;show&#34;
-                    );
-
-                }
-
-            }, 200);
-
+          setTimeout(() => {
+            const desc = this.shadow.querySelector("#tgModalDesc");
+            const modal = this.shadow.querySelector("#tgPremiumModal");
+            if (desc) {
+              desc.innerText = "Join Our Telegram Channel For 24-Hour Full Access To Uninterrupted HD Live Streams And Updates.";
+            }
+            if (modal) {
+              modal.classList.add("show");
+            }
+          }, 200);
         }
+      }
 
-    }
-
-
-    /* =====================================================
-       FETCH CHANNELS
-       ===================================================== */
-
-    async fetchChannels() {
-
-        const grid =
-            this.shadow.querySelector(
-                &#34;#channels-grid&#34;
-            );
-
-
+      /* =====================================================
+         FETCH CHANNELS
+         ===================================================== */
+      async fetchChannels() {
+        const grid = this.shadow.querySelector("#channels-grid");
         try {
-
-            const res =
-                await fetch(
-                    window.CricConfig.sourceUrl
-                );
-
-
-            if (!res.ok) {
-
-                throw new Error(
-                    &#34;HTTP &#34; +
-                    res.status
-                );
-
-            }
-
-
-            const data =
-                await res.json();
-
-
-            this.masterChannels =
-    Array.isArray(data)
-        ? data
-        : (
-            data.iframes ||
-            data.channels ||
-            data.streams ||
-            data.data ||
-            (
-                data &amp;&amp;
-                typeof data === &#34;object&#34;
-                    ? Object.entries(data).map(
-                        ([id, url]) =&gt; ({
-                            id,
-                            name: id,
-                            title: id,
-                            url
-                        })
-                    )
-                    : []
-            )
-        );
-
-
-            if (
-                this.masterChannels.length === 0
-            ) {
-
-                grid.innerHTML =
-                    `
-                    &lt;div class=&#34;state-container&#34;&gt;
-                        No channels found.
-                    &lt;/div&gt;
-                    `;
-
-                return;
-            }
-
-
-            this.renderGrid();
-
-            this.handleUrlRouting();
-
-
-        } catch (err) {
-
-            console.error(
-                &#34;Channel feed error:&#34;,
-                err
-            );
-
-
-            grid.innerHTML =
-                `
-                &lt;div
-                    class=&#34;state-container&#34;
-                    style=&#34;color:#ef4444;&#34;
-                &gt;
-                    Failed to load channels feed.
-                &lt;/div&gt;
-                `;
-
-            if (this.initialPendingId) {
-
-                this.closePlayer();
-
-            }
-
-        }
-
-    }
-
-
-    /* =====================================================
-       RENDER GRID
-       ===================================================== */
-
-    renderGrid() {
-
-        const grid =
-            this.shadow.querySelector(
-                &#34;#channels-grid&#34;
-            );
-
-
-        grid.innerHTML =
-            &#34;&#34;;
-
-
-        this.masterChannels.forEach(
-            (channel, index) =&gt; {
-
-                const channelId =
-                    channel.id !== undefined
-                        ? channel.id
-                        : index;
-
-
-                const title =
-                    channel.title ||
-                    channel.name ||
-                    channel.channel ||
-                    `Channel ${index + 1}`;
-
-
-                const poster =
-                    channel.poster ||
-                    channel.image ||
-                    channel.logo ||
-                    channel.img ||
-                    &#34;&#34;;
-
-
-                const lowerTitle =
-                    title.toLowerCase();
-
-
-                /*
-                 * Detect channel type
-                 */
-
-                const isSony =
-                    lowerTitle.includes(
-                        &#34;sony&#34;
-                    );
-
-
-                const isStar =
-                    lowerTitle.includes(
-                        &#34;star&#34;
-                    );
-
-
-                let tagText =
-                    title.split(&#34; &#34;)[0] ||
-                    &#34;LIVE&#34;;
-
-
-                let thumbHtml =
-                    &#34;&#34;;
-
-
-                /* =================================================
-                   STAR CHANNEL
-                   ================================================= */
-
-                if (isStar) {
-
-                    tagText =
-                        &#34;STAR&#34;;
-
-
-                    thumbHtml =
-                        `
-                        &lt;div
-                            class=&#34;card-thumbnail&#34;
-                        &gt;
-
-                            &lt;div
-                                class=&#34;channel-logo-box&#34;
-                            &gt;
-
-                                &lt;img
-                                    class=&#34;channel-logo&#34;
-                                    src=&#34;${window.CricConfig.starLogo}&#34;
-                                    alt=&#34;Star Sports&#34;
-                                    loading=&#34;lazy&#34;
-                                    referrerpolicy=&#34;no-referrer&#34;
-                                &gt;
-
-                            &lt;/div&gt;
-
-
-                            &lt;span
-                                class=&#34;card-network-tag&#34;
-                            &gt;
-                                STAR
-                            &lt;/span&gt;
-
-
-                            &lt;div
-                                class=&#34;play-overlay-icon&#34;
-                            &gt;
-
-                                &lt;svg
-                                    viewBox=&#34;0 0 24 24&#34;
-                                &gt;
-
-                                    &lt;path
-                                        d=&#34;M8 5v14l11-7z&#34;
-                                    /&gt;
-
-                                &lt;/svg&gt;
-
-                            &lt;/div&gt;
-
-                        &lt;/div&gt;
-                        `;
-
-
-                /* =================================================
-                   SONY CHANNEL
-                   ================================================= */
-
-                } else if (isSony) {
-
-                    tagText =
-                        &#34;SONY&#34;;
-
-
-                    thumbHtml =
-                        `
-                        &lt;div
-                            class=&#34;card-thumbnail&#34;
-                        &gt;
-
-                            &lt;div
-                                class=&#34;channel-logo-box&#34;
-                            &gt;
-
-                                &lt;img
-                                    class=&#34;channel-logo&#34;
-                                    src=&#34;${window.CricConfig.sonyLogo}&#34;
-                                    alt=&#34;Sony Sports&#34;
-                                    loading=&#34;lazy&#34;
-                                    referrerpolicy=&#34;no-referrer&#34;
-                                &gt;
-
-                            &lt;/div&gt;
-
-
-                            &lt;span
-                                class=&#34;card-network-tag&#34;
-                            &gt;
-                                SONY
-                            &lt;/span&gt;
-
-
-                            &lt;div
-                                class=&#34;play-overlay-icon&#34;
-                            &gt;
-
-                                &lt;svg
-                                    viewBox=&#34;0 0 24 24&#34;
-                                &gt;
-
-                                    &lt;path
-                                        d=&#34;M8 5v14l11-7z&#34;
-                                    /&gt;
-
-                                &lt;/svg&gt;
-
-                            &lt;/div&gt;
-
-                        &lt;/div&gt;
-                        `;
-
-
-                /* =================================================
-                   CHANNEL WITH POSTER
-                   ================================================= */
-
-                } else if (poster) {
-
-                    thumbHtml =
-                        `
-                        &lt;div
-                            class=&#34;card-thumbnail&#34;
-                            style=&#34;
-                                background-image:
-                                url(&#39;${poster.replace(
-                                    /&#39;/g,
-                                    &#34;%27&#34;
-                                )}&#39;)
-                            &#34;
-                        &gt;
-
-                            &lt;div
-                                class=&#34;play-overlay-icon&#34;
-                            &gt;
-
-                                &lt;svg
-                                    viewBox=&#34;0 0 24 24&#34;
-                                &gt;
-
-                                    &lt;path
-                                        d=&#34;M8 5v14l11-7z&#34;
-                                    /&gt;
-
-                                &lt;/svg&gt;
-
-                            &lt;/div&gt;
-
-                        &lt;/div&gt;
-                        `;
-
-
-                /* =================================================
-                   GENERIC CHANNEL
-                   ================================================= */
-
-                } else {
-
-                    const badgeIcon =
-                        `
-                        &lt;svg
-                            viewBox=&#34;0 0 24 24&#34;
-                        &gt;
-
-                            &lt;path
-                                d=&#34;
-                                M12 2L2 7l10 5 10-5-10-5z
-                                M2 17l10 5 10-5
-                                M2 12l10 5 10-5
-                                &#34;
-                            /&gt;
-
-                        &lt;/svg&gt;
-                        `;
-
-
-                    thumbHtml =
-                        `
-                        &lt;div
-                            class=&#34;card-thumbnail&#34;
-                        &gt;
-
-                            &lt;div
-                                class=&#34;channel-badge-box&#34;
-                            &gt;
-                                ${badgeIcon}
-                            &lt;/div&gt;
-
-
-                            &lt;span
-                                class=&#34;card-network-tag&#34;
-                            &gt;
-                                ${this.escapeHtml(
-                                    tagText
-                                )}
-                            &lt;/span&gt;
-
-
-                            &lt;div
-                                class=&#34;play-overlay-icon&#34;
-                            &gt;
-
-                                &lt;svg
-                                    viewBox=&#34;0 0 24 24&#34;
-                                &gt;
-
-                                    &lt;path
-                                        d=&#34;M8 5v14l11-7z&#34;
-                                    /&gt;
-
-                                &lt;/svg&gt;
-
-                            &lt;/div&gt;
-
-                        &lt;/div&gt;
-                        `;
-
-                }
-
-
-                const card =
-                    document.createElement(
-                        &#34;div&#34;
-                    );
-
-
-                card.className =
-                    &#34;channel-card&#34;;
-
-
-                card.onclick =
-                    () =&gt;
-                        this.openPlayer(
-                            channelId
-                        );
-
-
-                card.innerHTML =
-                    `
-
-                    ${thumbHtml}
-
-
-                    &lt;div class=&#34;card-body&#34;&gt;
-
-                        &lt;div
-                            class=&#34;card-title&#34;
-                        &gt;
-                            ${this.escapeHtml(
-                                title
-                            )}
-                        &lt;/div&gt;
-
-
-                        &lt;div
-                            class=&#34;card-meta&#34;
-                        &gt;
-
-                            &lt;span&gt;
-                                HD FEED
-                            &lt;/span&gt;
-
-
-                            &lt;span
-                                style=&#34;
-                                    color:
-                                    var(--accent);
-                                &#34;
-                            &gt;
-                                WATCH NOW
-                            &lt;/span&gt;
-
-                        &lt;/div&gt;
-
-                    &lt;/div&gt;
-
-                    `;
-
-
-                grid.appendChild(
-                    card
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       ESCAPE HTML
-       ===================================================== */
-
-    escapeHtml(value) {
-
-        return String(value)
-
-            .replace(
-                /&amp;/g,
-                &#34;&amp;amp;&#34;
-            )
-
-            .replace(
-                /&lt;/g,
-                &#34;&amp;lt;&#34;
-            )
-
-            .replace(
-                /&gt;/g,
-                &#34;&amp;gt;&#34;
-            )
-
-            .replace(
-                /&#34;/g,
-                &#34;&amp;quot;&#34;
-            )
-
-            .replace(
-                /&#39;/g,
-                &#34;&amp;#039;&#34;
-            );
-
-    }
-
-
-    /* =====================================================
-       OPEN PLAYER
-       ===================================================== */
-
-    openPlayer(identifier) {
-
-        const target =
-            this.masterChannels.find(
-                (ch, idx) =&gt;
-                    ch.id == identifier ||
-                    idx == identifier
-            );
-
-
-        if (!target) {
-            this.closePlayer();
+          const res = await fetch(window.CricConfig.sourceUrl);
+          if (!res.ok) {
+            throw new Error("HTTP " + res.status);
+          }
+          const data = await res.json();
+          this.masterChannels = Array.isArray(data)
+            ? data
+            : (data.iframes || data.channels || data.streams || data.data ||
+              (data && typeof data === "object"
+                ? Object.entries(data).map(([id, url]) => ({ id, name: id, title: id, url }))
+                : []));
+          if (this.masterChannels.length === 0) {
+            grid.innerHTML = `<div class="state-container">No channels found.</div>`;
             return;
+          }
+          this.renderGrid();
+          this.handleUrlRouting();
+        } catch (err) {
+          console.error("Channel feed error:", err);
+          grid.innerHTML = `<div class="state-container" style="color:#ef4444;">Failed to load channels feed.</div>`;
+          if (this.initialPendingId) {
+            this.closePlayer();
+          }
         }
+      }
 
+      /* =====================================================
+         RENDER GRID
+         ===================================================== */
+      renderGrid() {
+        const grid = this.shadow.querySelector("#channels-grid");
+        grid.innerHTML = "";
+        this.masterChannels.forEach((channel, index) => {
+          const channelId = channel.id !== undefined ? channel.id : index;
+          const title = channel.title || channel.name || channel.channel || `Channel ${index + 1}`;
+          const poster = channel.poster || channel.image || channel.logo || channel.img || "";
+          const lowerTitle = title.toLowerCase();
+          const isSony = lowerTitle.includes("sony");
+          const isStar = lowerTitle.includes("star");
+          let tagText = title.split(" ")[0] || "LIVE";
+          let thumbHtml = "";
 
-        let streamUrl =
+          if (isStar) {
+            tagText = "STAR";
+            thumbHtml = `
+              <div class="card-thumbnail">
+                <div class="channel-logo-box">
+                  <img class="channel-logo" src="${window.CricConfig.starLogo}" alt="Star Sports" loading="lazy" referrerpolicy="no-referrer">
+                </div>
+                <span class="card-network-tag">STAR</span>
+                <div class="play-overlay-icon">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>`;
+          } else if (isSony) {
+            tagText = "SONY";
+            thumbHtml = `
+              <div class="card-thumbnail">
+                <div class="channel-logo-box">
+                  <img class="channel-logo" src="${window.CricConfig.sonyLogo}" alt="Sony Sports" loading="lazy" referrerpolicy="no-referrer">
+                </div>
+                <span class="card-network-tag">SONY</span>
+                <div class="play-overlay-icon">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>`;
+          } else if (poster) {
+            thumbHtml = `
+              <div class="card-thumbnail" style="background-image: url('${poster.replace(/'/g, "%27")}')">
+                <div class="play-overlay-icon">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>`;
+          } else {
+            const badgeIcon = `
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/>
+              </svg>`;
+            thumbHtml = `
+              <div class="card-thumbnail">
+                <div class="channel-badge-box">${badgeIcon}</div>
+                <span class="card-network-tag">${this.escapeHtml(tagText)}</span>
+                <div class="play-overlay-icon">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>`;
+          }
 
-            target.iframeSrc ||
+          const card = document.createElement("div");
+          card.className = "channel-card";
+          card.onclick = () => this.openPlayer(channelId);
+          card.innerHTML = `
+            ${thumbHtml}
+            <div class="card-body">
+              <div class="card-title">${this.escapeHtml(title)}</div>
+              <div class="card-meta">
+                <span>HD FEED</span>
+                <span style="color: var(--accent);">WATCH NOW</span>
+              </div>
+            </div>`;
+          grid.appendChild(card);
+        });
+      }
 
-            target.url ||
+      /* =====================================================
+         ESCAPE HTML
+         ===================================================== */
+      escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
 
-            target.link ||
-
-            target.stream ||
-
-            target.file ||
-
-            target.source ||
-
-            target.src;
-
-
+      /* =====================================================
+         OPEN PLAYER
+         ===================================================== */
+      openPlayer(identifier) {
+        const target = this.masterChannels.find((ch, idx) => ch.id == identifier || idx == identifier);
+        if (!target) {
+          this.closePlayer();
+          return;
+        }
+        let streamUrl = target.iframeSrc || target.url || target.link || target.stream || target.file || target.source || target.src;
         if (!streamUrl) {
+          streamUrl = `https://sonucdn-v2.pages.dev/star.html?id=${encodeURIComponent(target.id || identifier)}`;
+        }
+        const title = target.title || target.name || target.channel || "Live Broadcast";
+        this.currentStreamId = identifier;
+        this.shadow.querySelector("#activeStreamTitleDisplay").innerText = title;
+        this.shadow.querySelector("#player").src = streamUrl;
+        const loadingOverlay = this.shadow.querySelector("#streamLoadingOverlay");
+        if (loadingOverlay) {
+          loadingOverlay.classList.add("hidden");
+        }
+        this.shadow.querySelector("#home-view").classList.remove("active");
+        this.shadow.querySelector("#player-view").classList.add("active");
+        if (!this.isUnlocked) {
+          if (this.lockTimer) {
+            clearTimeout(this.lockTimer);
+          }
+          this.lockTimer = setTimeout(() => this.triggerLock(), window.CricConfig.previewDuration);
+        }
+        const query = `?id=${encodeURIComponent(identifier)}`;
+        if (window.location.search !== query) {
+          history.pushState({ playerOpen: true, id: identifier }, "", query);
+        }
+        window.scrollTo(0, 0);
+      }
 
-            streamUrl =
-                `https://sonucdn-v2.pages.dev/star.html?id=${encodeURIComponent( 
-                    target.id || 
-                    identifier 
-                )}`; 
- 
-        } 
- 
- 
-        const title = 
- 
-            target.title || 
- 
-            target.name || 
- 
-            target.channel || 
- 
-            &#34;Live Broadcast&#34;; 
- 
- 
-        this.currentStreamId = 
-            identifier; 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#activeStreamTitleDisplay&#34; 
-        ).innerText = 
-            title; 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#player&#34; 
-        ).src = 
-            streamUrl; 
+      /* =====================================================
+         CLOSE PLAYER
+         ===================================================== */
+      closePlayer() {
+        this.shadow.querySelector("#player").src = "about:blank";
+        const loadingOverlayEl = this.shadow.querySelector("#streamLoadingOverlay");
+        if (loadingOverlayEl) {
+          loadingOverlayEl.classList.add("hidden");
+        }
+        if (this.lockTimer) {
+          clearTimeout(this.lockTimer);
+          this.lockTimer = null;
+        }
+        this.shadow.querySelector("#tgPremiumModal").classList.remove("show");
+        try {
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          }
+        } catch (err) {}
+        this.shadow.querySelector("#playerContainer").classList.remove("fs-active");
+        this.shadow.querySelector("#themeSwitchDeck").classList.remove("hidden");
+        this.shadow.querySelector("#player-view").classList.remove("active");
+        this.shadow.querySelector("#home-view").classList.add("active");
+        this.currentStreamId = null;
+        if (window.location.search !== "") {
+          history.pushState({}, "", window.location.pathname);
+        }
+      }
 
+      /* =====================================================
+         URL ROUTING
+         ===================================================== */
+      handleUrlRouting() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+        if (id !== null && this.masterChannels.length > 0) {
+          this.openPlayer(id);
+        } else if (id === null && this.currentStreamId !== null) {
+          this.closePlayer();
+        }
+      }
 
-        const loadingOverlay = 
-            this.shadow.querySelector( 
-                &#34;#streamLoadingOverlay&#34; 
-            ); 
+      /* =====================================================
+         LOCK
+         ===================================================== */
+      triggerLock() {
+        if (this.isUnlocked) return;
+        const iframe = this.shadow.querySelector("#player");
+        try {
+          if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage("cricxcrate-force-pause", "*");
+          }
+        } catch (e) {}
+        try {
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          }
+        } catch (err) {}
+        this.shadow.querySelector("#tgModalDesc").innerText = "Free Preview Ended! Join Our Telegram To Unlock 24-Hour Uninterrupted Access With Zero Locks.";
+        this.shadow.querySelector("#tgPremiumModal").classList.add("show");
+      }
 
-        if (loadingOverlay) { 
+      /* =====================================================
+         TELEGRAM
+         ===================================================== */
+      handleJoinTelegram() {
+        localStorage.setItem("cricxcrate_unlocked_time", Date.now().toString());
+        this.isUnlocked = true;
+        this.shadow.querySelector("#tgPremiumModal").classList.remove("show");
+        window.open(window.CricConfig.telegramLink, "_blank", "noopener");
+        const laterBtn = this.shadow.querySelector("#tgLaterModalBtn");
+        if (laterBtn) {
+          laterBtn.style.display = "flex";
+        }
+        const iframe = this.shadow.querySelector("#player");
+        try {
+          if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage("cricxcrate-force-play", "*");
+          }
+        } catch (e) {}
+      }
 
-            loadingOverlay.classList.add( 
-                &#34;hidden&#34; 
-            ); 
+      /* =====================================================
+         LATER
+         ===================================================== */
+      handleLater() {
+        this.laterCount++;
+        if (this.laterCount >= 2) {
+          const laterBtn = this.shadow.querySelector("#tgLaterModalBtn");
+          if (laterBtn) {
+            laterBtn.style.display = "none";
+          }
+          this.shadow.querySelector("#tgModalDesc").innerText = "Access Limit Reached! Please Join Our Telegram Channel To Proceed.";
+          return;
+        }
+        this.shadow.querySelector("#tgPremiumModal").classList.remove("show");
+        const iframe = this.shadow.querySelector("#player");
+        try {
+          if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage("cricxcrate-force-play", "*");
+          }
+        } catch (e) {}
+      }
 
-        } 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#home-view&#34; 
-        ).classList.remove( 
-            &#34;active&#34; 
-        ); 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#player-view&#34; 
-        ).classList.add( 
-            &#34;active&#34; 
-        ); 
- 
- 
-        if (!this.isUnlocked) { 
- 
-            if (this.lockTimer) { 
- 
-                clearTimeout( 
-                    this.lockTimer 
-                ); 
- 
-            } 
- 
- 
-            this.lockTimer = 
-                setTimeout( 
-                    () =&gt; 
-                        this.triggerLock(), 
- 
-                    window.CricConfig 
-                        .previewDuration 
-                ); 
- 
-        } 
- 
- 
-        const query = 
-            `?id=${encodeURIComponent( 
-                identifier 
-            )}`; 
- 
- 
-        if ( 
-            window.location.search !== 
-            query 
-        ) { 
- 
-            history.pushState( 
-                { 
-                    playerOpen: 
-                        true, 
- 
-                    id: 
-                        identifier 
-                }, 
- 
-                &#34;&#34;, 
- 
-                query 
-            ); 
- 
-        } 
- 
- 
-        window.scrollTo( 
-            0, 
-            0 
-        ); 
- 
-    } 
- 
- 
-    /* ===================================================== 
-       CLOSE PLAYER 
-       ===================================================== */ 
- 
-    closePlayer() { 
- 
-        this.shadow.querySelector( 
-            &#34;#player&#34; 
-        ).src = 
-            &#34;about:blank&#34;; 
- 
- 
-        const loadingOverlayEl = 
-            this.shadow.querySelector( 
-                &#34;#streamLoadingOverlay&#34; 
-            ); 
- 
-        if (loadingOverlayEl) { 
- 
-            loadingOverlayEl.classList.add( 
-                &#34;hidden&#34; 
-            ); 
- 
-        } 
- 
- 
-        if (this.lockTimer) { 
- 
-            clearTimeout( 
-                this.lockTimer 
-            ); 
- 
-            this.lockTimer = 
-                null; 
-        } 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#tgPremiumModal&#34; 
-        ).classList.remove( 
-            &#34;show&#34; 
-        ); 
- 
- 
-        try { 
- 
-            if ( 
-                document.fullscreenElement 
-            ) { 
- 
-                document.exitFullscreen() 
-                    .catch( 
-                        () =&gt; {} 
-                    ); 
- 
-            } 
- 
-        } catch (err) {} 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#playerContainer&#34; 
-        ).classList.remove( 
-            &#34;fs-active&#34; 
-        ); 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#themeSwitchDeck&#34; 
-        ).classList.remove( 
-            &#34;hidden&#34; 
-        ); 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#player-view&#34; 
-        ).classList.remove( 
-            &#34;active&#34; 
-        ); 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#home-view&#34; 
-        ).classList.add( 
-            &#34;active&#34; 
-        ); 
- 
- 
-        this.currentStreamId = 
-            null; 
- 
- 
-        if ( 
-            window.location.search !== 
-            &#34;&#34; 
-        ) { 
- 
-            history.pushState( 
-                {}, 
-                &#34;&#34;, 
-                window.location.pathname 
-            ); 
- 
-        } 
- 
-    } 
- 
- 
-    /* ===================================================== 
-       URL ROUTING 
-       ===================================================== */ 
- 
-    handleUrlRouting() { 
- 
-        const params = 
-            new URLSearchParams( 
-                window.location.search 
-            ); 
- 
- 
-        const id = 
-            params.get( 
-                &#34;id&#34; 
-            ); 
- 
- 
-        if ( 
-            id !== null &amp;&amp; 
-            this.masterChannels.length &gt; 0 
-        ) { 
- 
-            this.openPlayer( 
-                id 
-            ); 
- 
-        } else if ( 
-            id === null &amp;&amp; 
-            this.currentStreamId !== null 
-        ) { 
- 
-            this.closePlayer(); 
- 
-        } 
- 
-    } 
- 
- 
-    /* ===================================================== 
-       LOCK 
-       ===================================================== */ 
- 
-    triggerLock() { 
- 
-        if (this.isUnlocked) 
-            return; 
- 
- 
-        const iframe = 
-            this.shadow.querySelector( 
-                &#34;#player&#34; 
-            ); 
- 
- 
-        try { 
- 
-            if ( 
-                iframe &amp;&amp; 
-                iframe.contentWindow 
-            ) { 
- 
-                iframe.contentWindow.postMessage( 
-                    &#34;cricxcrate-force-pause&#34;, 
-                    &#34;*&#34; 
-                ); 
- 
-            } 
- 
-        } catch (e) {} 
- 
- 
-        try { 
- 
-            if ( 
-                document.fullscreenElement 
-            ) { 
- 
-                document.exitFullscreen() 
-                    .catch( 
-                        () =&gt; {} 
-                    ); 
- 
-            } 
- 
-        } catch (err) {} 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#tgModalDesc&#34; 
-        ).innerText = 
-            &#34;Free Preview Ended! Join Our Telegram To Unlock 24-Hour Uninterrupted Access With Zero Locks.&#34;; 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#tgPremiumModal&#34; 
-        ).classList.add( 
-            &#34;show&#34; 
-        ); 
- 
-    } 
- 
- 
-    /* ===================================================== 
-       TELEGRAM 
-       ===================================================== */ 
- 
-    handleJoinTelegram() { 
- 
-        localStorage.setItem( 
-            &#34;cricxcrate_unlocked_time&#34;, 
-            Date.now().toString() 
-        ); 
- 
- 
-        this.isUnlocked = 
-            true; 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#tgPremiumModal&#34; 
-        ).classList.remove( 
-            &#34;show&#34; 
-        ); 
- 
- 
-        window.open( 
-            window.CricConfig.telegramLink, 
-            &#34;_blank&#34;, 
-            &#34;noopener&#34; 
-        ); 
- 
- 
-        const laterBtn = 
-            this.shadow.querySelector( 
-                &#34;#tgLaterModalBtn&#34; 
-            ); 
- 
- 
-        if (laterBtn) { 
- 
-            laterBtn.style.display = 
-                &#34;flex&#34;; 
- 
-        } 
- 
- 
-        const iframe = 
-            this.shadow.querySelector( 
-                &#34;#player&#34; 
-            ); 
- 
- 
-        try { 
- 
-            if ( 
-                iframe &amp;&amp; 
-                iframe.contentWindow 
-            ) { 
- 
-                iframe.contentWindow.postMessage( 
-                    &#34;cricxcrate-force-play&#34;, 
-                    &#34;*&#34; 
-                ); 
- 
-            } 
- 
-        } catch (e) {} 
- 
-    } 
- 
- 
-    /* ===================================================== 
-       LATER 
-       ===================================================== */ 
- 
-    handleLater() { 
- 
-        this.laterCount++; 
- 
- 
-        if ( 
-            this.laterCount &gt;= 2 
-        ) { 
- 
-            const laterBtn = 
-                this.shadow.querySelector( 
-                    &#34;#tgLaterModalBtn&#34; 
-                ); 
- 
- 
-            if (laterBtn) { 
- 
-                laterBtn.style.display = 
-                    &#34;none&#34;; 
- 
-            } 
- 
- 
-            this.shadow.querySelector( 
-                &#34;#tgModalDesc&#34; 
-            ).innerText = 
-                &#34;Access Limit Reached! Please Join Our Telegram Channel To Proceed.&#34;; 
- 
- 
-            return; 
- 
-        } 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#tgPremiumModal&#34; 
-        ).classList.remove( 
-            &#34;show&#34; 
-        ); 
- 
- 
-        const iframe = 
-            this.shadow.querySelector( 
-                &#34;#player&#34; 
-            ); 
- 
- 
-        try { 
- 
-            if ( 
-                iframe &amp;&amp; 
-                iframe.contentWindow 
-            ) { 
- 
-                iframe.contentWindow.postMessage( 
-                    &#34;cricxcrate-force-play&#34;, 
-                    &#34;*&#34; 
-                ); 
- 
-            } 
- 
-        } catch (e) {} 
- 
-    } 
- 
- 
-    /* ===================================================== 
-       FULLSCREEN 
-       ===================================================== */ 
- 
-    toggleFullscreen() { 
- 
-        const rig = 
-            this.shadow.querySelector( 
-                &#34;#playerContainer&#34; 
-            ); 
- 
- 
-        const themeDeck = 
-            this.shadow.querySelector( 
-                &#34;#themeSwitchDeck&#34; 
-            ); 
- 
- 
-        const fsIconSvg = 
-            this.shadow.querySelector( 
-                &#34;#fsIconSvg&#34; 
-            ); 
- 
- 
-        if (!rig) 
-            return; 
- 
- 
-        const isFull = 
-            document.fullscreenElement || 
-            rig.classList.contains( 
-                &#34;fs-active&#34; 
-            ); 
- 
- 
-        if (!isFull) { 
- 
-            rig.classList.add( 
-                &#34;fs-active&#34; 
-            ); 
- 
- 
-            if (themeDeck) { 
- 
-                themeDeck.classList.add( 
-                    &#34;hidden&#34; 
-                ); 
- 
-            } 
- 
- 
-            if (fsIconSvg) { 
- 
-                fsIconSvg.innerHTML = 
-                    ` 
-                    &lt;path 
-                        d=&#34; 
-                        M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 
-                        11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z 
-                        &#34; 
-                    /&gt; 
-                    `; 
- 
-            } 
- 
- 
-            try { 
- 
-                if ( 
-                    rig.requestFullscreen 
-                ) { 
- 
-                    rig.requestFullscreen() 
-                        .catch( 
-                            () =&gt; {} 
-                        ); 
- 
-                } 
- 
-            } catch (err) {} 
- 
- 
-        } else { 
- 
-            rig.classList.remove( 
-                &#34;fs-active&#34; 
-            ); 
- 
- 
-            if (themeDeck) { 
- 
-                themeDeck.classList.remove( 
-                    &#34;hidden&#34; 
-                ); 
- 
-            } 
- 
- 
-            if (fsIconSvg) { 
- 
-                fsIconSvg.innerHTML = 
-                    ` 
-                    &lt;path 
-                        d=&#34; 
-                        M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 
-                        7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z 
-                        &#34; 
-                    /&gt; 
-                    `; 
- 
-            } 
- 
- 
-            try { 
- 
-                if ( 
-                    document.exitFullscreen 
-                ) { 
- 
-                    document.exitFullscreen() 
-                        .catch( 
-                            () =&gt; {} 
-                        ); 
- 
-                } 
- 
-            } catch (err) {} 
- 
-        } 
- 
-    } 
- 
- 
-    /* ===================================================== 
-       MESSAGE LISTENER 
-       ===================================================== */ 
- 
-    setupMessageListener() { 
- 
-        window.addEventListener( 
-            &#34;message&#34;, 
-            (e) =&gt; { 
- 
-                if ( 
- 
-                    e.data === 
-                    &#34;cricxcrate-playing&#34; &amp;&amp; 
- 
-                    !this.isUnlocked &amp;&amp; 
- 
-                    !this.lockTimer 
- 
-                ) { 
- 
-                    this.lockTimer = 
-                        setTimeout( 
- 
-                            () =&gt; 
-                                this.triggerLock(), 
- 
-                            window.CricConfig 
-                                .previewDuration 
- 
-                        ); 
- 
-                } 
- 
-            } 
-        ); 
- 
- 
-        document.addEventListener( 
-            &#34;fullscreenchange&#34;, 
-            () =&gt; { 
- 
-                const rig = 
-                    this.shadow.querySelector( 
-                        &#34;#playerContainer&#34; 
-                    ); 
- 
- 
-                const themeDeck = 
-                    this.shadow.querySelector( 
-                        &#34;#themeSwitchDeck&#34; 
-                    ); 
- 
- 
-                const fsIconSvg = 
-                    this.shadow.querySelector( 
-                        &#34;#fsIconSvg&#34; 
-                    ); 
- 
- 
-                if ( 
- 
-                    !document.fullscreenElement &amp;&amp; 
- 
-                    !document.webkitIsFullScreen &amp;&amp; 
- 
-                    rig 
- 
-                ) { 
- 
-                    rig.classList.remove( 
-                        &#34;fs-active&#34; 
-                    ); 
- 
- 
-                    if (themeDeck) { 
- 
-                        themeDeck.classList.remove( 
-                            &#34;hidden&#34; 
-                        ); 
- 
-                    } 
- 
- 
-                    if (fsIconSvg) { 
- 
-                        fsIconSvg.innerHTML = 
-                            ` 
-                            &lt;path 
-                                d=&#34; 
-                                M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 
-                                7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z 
-                                &#34; 
-                            /&gt; 
-                            `; 
- 
-                    } 
- 
-                } 
- 
-            } 
-        ); 
- 
-    } 
- 
- 
-    /* ===================================================== 
-       EVENT LISTENERS 
-       ===================================================== */ 
- 
-    initEventListeners() { 
- 
-        this.shadow.querySelector( 
-            &#34;#backHomeBtn&#34; 
-        ).onclick = 
-            () =&gt; 
-                this.closePlayer(); 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#brandHomeLink&#34; 
-        ).onclick = 
-            () =&gt; 
-                this.closePlayer(); 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#tgJoinModalBtn&#34; 
-        ).onclick = 
-            () =&gt; 
-                this.handleJoinTelegram(); 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#tgLaterModalBtn&#34; 
-        ).onclick = 
-            () =&gt; 
-                this.handleLater(); 
- 
- 
-        this.shadow.querySelector( 
-            &#34;#blendedFsBtn&#34; 
-        ).onclick = 
-            () =&gt; 
-                this.toggleFullscreen(); 
- 
- 
-        /* DARK THEME */ 
- 
-        this.shadow.querySelector( 
-            &#34;#themeDarkBtn&#34; 
-        ).onclick = 
-            () =&gt; { 
- 
-                this.removeAttribute( 
-                    &#34;data-theme&#34; 
-                ); 
- 
- 
-                this.shadow.querySelector( 
-                    &#34;#themeDarkBtn&#34; 
-                ).classList.add( 
-                    &#34;active&#34; 
-                ); 
- 
- 
-                this.shadow.querySelector( 
-                    &#34;#themeLightBtn&#34; 
-                ).classList.remove( 
-                    &#34;active&#34; 
-                ); 
- 
-            }; 
- 
- 
-        /* LIGHT THEME */ 
- 
-        this.shadow.querySelector( 
-            &#34;#themeLightBtn&#34; 
-        ).onclick = 
-            () =&gt; { 
- 
-                this.setAttribute( 
-                    &#34;data-theme&#34;, 
-                    &#34;light&#34; 
-                ); 
- 
- 
-                this.shadow.querySelector( 
-                    &#34;#themeLightBtn&#34; 
-                ).classList.add( 
-                    &#34;active&#34; 
-                ); 
- 
- 
-                this.shadow.querySelector( 
-                    &#34;#themeDarkBtn&#34; 
-                ).classList.remove( 
-                    &#34;active&#34; 
-                ); 
- 
-            }; 
- 
- 
-        /* SHARE */ 
- 
-        const btnShare = 
-            this.shadow.querySelector( 
-                &#34;#btnShare&#34; 
-            ); 
- 
- 
-        const shareText = 
-            this.shadow.querySelector( 
-                &#34;#shareBtnText&#34; 
-            ); 
- 
- 
-        btnShare.onclick = 
-            async () =&gt; { 
- 
-                try { 
- 
-                    if ( 
-                        navigator.share 
-                    ) { 
- 
-                        await navigator.share({ 
- 
-                            title: 
-                                &#34;ARJUN CRICKET Live&#34;, 
- 
-                            url: 
-                                window.location.href 
- 
-                        }); 
- 
-                    } else { 
- 
-                        await navigator.clipboard 
-                            .writeText( 
-                                window.location.href 
-                            ); 
- 
- 
-                        shareText.textContent = 
-                            &#34;COPIED!&#34;; 
- 
- 
-                        setTimeout( 
-                            () =&gt; { 
- 
-                                shareText.textContent = 
-                                    &#34;SHARE STREAM&#34;; 
- 
-                            }, 
-                            1800 
-                        ); 
- 
-                    } 
- 
-                } catch (err) {} 
- 
-            }; 
- 
-    } 
- 
- 
-    /* ===================================================== 
-       WARP FIELD 
-       ===================================================== */ 
- 
-    initWarpField() { 
- 
-        const canvas = 
-            this.shadow.getElementById( 
-                &#34;warpGridCanvas&#34; 
-            ); 
- 
- 
-        if (!canvas) 
-            return; 
- 
- 
-        const ctx = 
-            canvas.getContext( 
-                &#34;2d&#34; 
-            ); 
- 
- 
-        const resize = 
-            () =&gt; { 
- 
-                canvas.width = 
-                    window.innerWidth; 
- 
-                canvas.height = 
-                    window.innerHeight; 
- 
-            }; 
- 
- 
-        window.addEventListener( 
-            &#34;resize&#34;, 
-            resize 
-        ); 
- 
- 
-        resize(); 
- 
- 
-        for ( 
-            let i = 0; 
-            i &lt; 100; 
-            i++ 
-        ) { 
- 
-            this.stars.push({ 
- 
-                x: 
-                    Math.random() * 
-                    canvas.width, 
- 
-                y: 
-                    Math.random() * 
-                    canvas.height, 
- 
-                length: 
-                    Math.random() * 
-                    20 + 
-                    10, 
- 
-                speed: 
-                    Math.random() * 
-                    2 + 
-                    1, 
- 
-                alpha: 
-                    Math.random() * 
-                    0.5 + 
-                    0.1 
- 
-            }); 
- 
-        } 
- 
- 
-        const render = 
-            () =&gt; { 
- 
-                ctx.clearRect( 
-                    0, 
-                    0, 
-                    canvas.width, 
-                    canvas.height 
-                ); 
- 
- 
-                ctx.lineWidth = 
-                    1.2; 
- 
- 
-                this.stars.forEach( 
-                    (star) =&gt; { 
- 
-                        ctx.strokeStyle = 
-                            `rgba( 
-                                0, 
-                                255, 
-                                204, 
-                                ${star.alpha} 
-                            )`; 
- 
- 
-                        ctx.beginPath(); 
- 
- 
-                        ctx.moveTo( 
-                            star.x, 
-                            star.y 
-                        ); 
- 
- 
-                        ctx.lineTo( 
-                            star.x + 
-                            star.length, 
- 
-                            star.y 
-                        ); 
- 
- 
-                        ctx.stroke(); 
- 
- 
-                        star.x += 
-                            star.speed; 
- 
- 
-                        if ( 
-                            star.x &gt; 
-                            canvas.width 
-                        ) { 
- 
-                            star.x = 
-                                -star.length; 
- 
- 
-                            star.y = 
-                                Math.random() * 
-                                canvas.height; 
- 
-                        } 
- 
-                    } 
-                ); 
- 
- 
-                this.animationFrameId = 
-                    requestAnimationFrame( 
-                        render 
-                    ); 
- 
-            }; 
- 
- 
-        render(); 
- 
-    } 
- 
-} 
- 
- 
-/* ========================================================= 
-   REGISTER CUSTOM ELEMENT 
-   ========================================================= */ 
- 
-customElements.define( 
-    &#34;cricxcrate-ui&#34;, 
-    CricXCrateUI 
-);
-    </script>
-    <!-- ======================================================= 
-     ARJUN CRICKET 
-     ======================================================= -->
-    <cricxcrate-ui>
-    </cricxcrate-ui>
-  </body>
-</html>
+      /* =====================================================
+         FULLSCREEN
+         ===================================================== */
+      toggleFullscreen() {
+        const rig = this.shadow.querySelector("#playerContainer");
+        const themeDeck = this.shadow.querySelector("#themeSwitchDeck");
+        const fsIconSvg = this.shadow.querySelector("#fsIconSvg");
+        if (!rig) return;
+        const isFull = document.fullscreenElement || rig.classList.contains("fs-active");
+        if (!isFull) {
+          rig.classList.add("fs-active");
+          if (themeDeck) {
+            themeDeck.classList.add("hidden");
+          }
+          if (fsIconSvg) {
+            fsIconSvg.innerHTML = `<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>`;
+          }
+          try {
+            if (rig.requestFullscreen) {
+              rig.requestFullscreen().catch(() => {});
+            }
+          } catch (err) {}
+        } else {
+          rig.classList.remove("fs-active");
+          if (themeDeck) {
+            themeDeck.classList.remove("hidden");
+          }
+          if (fsIconSvg) {
+            fsIconSvg.innerHTML = `<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>`;
+          }
+          try {
+            if (document.exitFullscreen) {
+              document.exitFullscreen().catch(() => {});
+            }
+          } catch (err) {}
+        }
+      }
+
+      /* =====================================================
+         MESSAGE LISTENER
+         ===================================================== */
+      setupMessageListener() {
+        window.addEventListener("message", (e) => {
+          if (e.data === "cricxcrate-playing" && !this.isUnlocked && !this.lockTimer) {
+            this.lockTimer = setTimeout(() => this.triggerLock(), window.CricConfig.previewDuration);
+          }
+        });
+        document.addEventListener("fullscreenchange", () => {
+          const rig = this.shadow.querySelector("#playerContainer");
+          const themeDeck = this.shadow.querySelector("#themeSwitchDeck");
+          const fsIconSvg = this.shadow.querySelector("#fsIconSvg");
+          if (!document.fullscreenElement && !document.webkitIsFullScreen && rig) {
+            rig.classList.remove("fs-active");
+            if (themeDeck) {
+              themeDeck.classList.remove("hidden");
+            }
+            if (fsIconSvg) {
+              fsIconSvg.innerHTML = `<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>`;
+            }
+          }
+        });
+      }
+
+      /* =====================================================
+         EVENT LISTENERS
+         ===================================================== */
+      initEventListeners() {
+        this.shadow.querySelector("#backHomeBtn").onclick = () => this.closePlayer();
+        this.shadow.querySelector("#brandHomeLink").onclick = () => this.closePlayer();
+        this.shadow.querySelector("#tgJoinModalBtn").onclick = () => this.handleJoinTelegram();
+        this.shadow.querySelector("#tgLaterModalBtn").onclick = () => this.handleLater();
+        this.shadow.querySelector("#blendedFsBtn").onclick = () => this.toggleFullscreen();
+
+        /* DARK THEME */
+        this.shadow.querySelector("#themeDarkBtn").onclick = () => {
+          this.removeAttribute("data-theme");
+          this.shadow.querySelector("#themeDarkBtn").classList.add("active");
+          this.shadow.querySelector("#themeLightBtn").classList.remove("active");
+        };
+
+        /* LIGHT THEME */
+        this.shadow.querySelector("#themeLightBtn").onclick = () => {
+          this.setAttribute("data-theme", "light");
+          this.shadow.querySelector("#themeLightBtn").classList.add("active");
+          this.shadow.querySelector("#themeDarkBtn").classList.remove("active");
+        };
+
+        /* SHARE */
+        const btnShare = this.shadow.querySelector("#btnShare");
+        const shareText = this.shadow.querySelector("#shareBtnText");
+        btnShare.onclick = async () => {
+          try {
+            if (navigator.share) {
+              await navigator.share({
+                title: "ARJUN CRICKET Live",
+                url: window.location.href
+              });
+            } else {
+              await navigator.clipboard.writeText(window.location.href);
+              shareText.textContent = "COPIED!";
+              setTimeout(() => {
+                shareText.textContent = "SHARE STREAM";
+              }, 1800);
+            }
+          } catch (err) {}
+        };
+      }
+
+      /* =====================================================
+         WARP FIELD
+         ===================================================== */
+      initWarpField() {
+        const canvas = this.shadow.getElementById("warpGridCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const resize = () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        };
+        window.addEventListener("resize", resize);
+        resize();
+        for (let i = 0; i < 100; i++) {
+          this.stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            length: Math.random() * 20 + 10,
+            speed: Math.random() * 2 + 1,
+            alpha: Math.random() * 0.5 + 0.1
+          });
+        }
+        const render = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.lineWidth = 1.2;
+          this.stars.forEach((star) => {
+            ctx.strokeStyle = `rgba(0, 255, 204, ${star.alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(star.x, star.y);
+            ctx.lineTo(star.x + star.length, star.y);
+            ctx.stroke();
+            star.x += star.speed;
+            if (star.x > canvas.width) {
+              star.x = -star.length;
+              star.y = Math.random() * canvas.height;
+            }
+          });
+          this.animationFrameId = requestAnimationFrame(render);
+        };
+        render();
+      }
+    }
+
+    /* =========================================================
+       REGISTER CUSTOM ELEMENT
+       ========================================================= */
+    customElements.define("cricxcrate-ui", CricXCrateUI);
+  </script>
+  <!-- =======================================================
+  ARJUN CRICKET
+  ======================================================= -->
+  <cricxcrate-ui>
+  </cricxcrate-ui>
+</body>
+  </html>
