@@ -1,1518 +1,1892 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>
-    ARJUN CRICKET — Live
-  </title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&amp;family=Manrope:wght@400;600;700;800;900&amp;family=Space+Grotesk:wght@500;700;800;900&amp;family=Syne:wght@700;800;900&amp;display=swap" rel="stylesheet" />
-  <style>
-    * {
-      -webkit-tap-highlight-color: transparent !important;
-      -webkit-touch-callout: none !important;
-      outline: none !important;
-    }
-  </style>
-</head>
-<body style="background-color:#050a0f;color:#fff;margin:0;padding:0;overflow-x:hidden;-webkit-tap-highlight-color:transparent;">
-  <script>
-    /* =========================================================
-       ARJUN CRICKET CONFIG
-       ========================================================= */
-    window.CricConfig = {
-      sourceUrl: "https://allrounderid2.pages.dev/id.json",
-      telegramLink: "https://t.me/arjuncricket18",
-      previewDuration: 10000,
-      /* Channel logos */
-      starLogo: "https://imgs.search.brave.com/wwDVnaXzqoCR-Bho0gu5YU3tfThVvzb-hpdYLapatZE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9sb2dv/ZGl4LmNvbS9sb2dv/Lzk0Nzc3Ni5qcGc",
-      sonyLogo: "https://imgs.search.brave.com/bXKRGBbwSsMRgzwLUP1oIsYXAltL3qP5Zbfv8D5PsNY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy8y/LzIzL1NvbnlfU3Bv/cnRzX05ldHdvcmtf/TG9nby5wbmc"
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARJUN CRICKET Live - Sports TV</title>
+    <style>
+        body { margin: 0; padding: 0; background-color: #fbf0f4; }
+    </style>
+<style type="text/css">* {user-select: auto !important; -webkit-user-select: auto !important;}</style><input type="hidden" id="inject_idm_text_selection"><style></style></head>
+<body>
+
+    <arjuncricket-ui></arjuncricket-ui>
+
+<script>
+class ArjunCricketUI extends HTMLElement {
+  static get observedAttributes() {
+    return ['stream-url'];
+  }
+
+  constructor() {
+    super();
+    this._shadow = this.attachShadow({ mode: 'closed' });
+    this.SENSITIVITY = 2.5;
+
+    this.CHANNELS = {
+      "1": { name: "Star Sports 1 SD", url: "https://sonucdn-v2.pages.dev/star?id=E1SD" },
+      "2": { name: "Star Sports 1 HD", url: "https://sonucdn-v2.pages.dev/star?id=E1HD" },
+      "3": { name: "Star Sports 1 Hindi", url: "https://sonucdn-v2.pages.dev/star?id=H1SD" },
+      "4": { name: "Star Sports 1 Hindi HD", url: "https://sonucdn-v2.pages.dev/star?id=H1HD" },
+      "5": { name: "Star Sports 2 SD", url: "https://sonucdn-v2.pages.dev/star?id=E2SD" },
+      "6": { name: "Star Sports 2 HD", url: "https://sonucdn-v2.pages.dev/star?id=E2HD" },
+      "7": { name: "Star Sports 2 Hindi", url: "https://sonucdn-v2.pages.dev/star?id=H2SD" },
+      "8": { name: "Star Sports 2 Hindi HD", url: "https://sonucdn-v2.pages.dev/star?id=H2HD" },
+      "9": { name: "Star Sports 3", url: "https://sonucdn-v2.pages.dev/star?id=SS3" },
+      "10": { name: "Star Select 1", url: "https://sonucdn-v2.pages.dev/star?id=SE1" },
+      "11": { name: "Star Select 1 HD", url: "https://sonucdn-v2.pages.dev/star?id=SE1HD" },
+      "12": { name: "Star Select 2", url: "https://sonucdn-v2.pages.dev/star?id=SE2" },
+      "13": { name: "Star Select 2 HD", url: "https://sonucdn-v2.pages.dev/star?id=SE2HD" },
+      "14": { name: "Star 1 Tamil SD", url: "https://sonucdn-v2.pages.dev/star?id=T1SD" },
+      "15": { name: "Star 1 Tamil HD", url: "https://sonucdn-v2.pages.dev/star?id=T1HD" },
+      "16": { name: "Star 1 Telugu SD", url: "https://sonucdn-v2.pages.dev/star?id=TE1SD" },
+      "17": { name: "Star 1 Telugu HD", url: "https://sonucdn-v2.pages.dev/star?id=TE1HD" },
+      "18": { name: "Star 1 Kannada SD", url: "https://sonucdn-v2.pages.dev/star?id=KA1SD" },
+      "19": { name: "Star 2 Tamil SD", url: "https://sonucdn-v2.pages.dev/star?id=T2SD" },
+      "20": { name: "Star 2 Tamil HD", url: "https://sonucdn-v2.pages.dev/star?id=S2HD" },
+      "21": { name: "Star 2 Telugu SD", url: "https://sonucdn-v2.pages.dev/star?id=TE2SD" },
+      "22": { name: "Star 2 Telugu HD", url: "https://sonucdn-v2.pages.dev/star?id=TE2HD" },
+      "23": { name: "Star 2 Kannada SD", url: "https://sonucdn-v2.pages.dev/star?id=KA2SD" },
+
+      "24": { name: "Sony Ten 1", url: "https://sonucdn-v2.pages.dev/star?id=STEN1" },
+      "25": { name: "Sony Ten 2", url: "https://sonucdn-v2.pages.dev/star?id=STEN2" },
+      "26": { name: "Sony Ten 3", url: "https://sonucdn-v2.pages.dev/star?id=STEN3" },
+      "27": { name: "Sony Ten 4 Tamil", url: "https://sonucdn-v2.pages.dev/star?id=STENT" },
+      "28": { name: "Sony Ten 4 Telugu", url: "https://sonucdn-v2.pages.dev/star?id=STENTU" },
+      "29": { name: "Sony Ten 5", url: "https://sonucdn-v2.pages.dev/star?id=STEN5" },
+      "30": { name: "Sony Ten 1 HD", url: "https://sonucdn-v2.pages.dev/star?id=STEN1HD" },
+      "31": { name: "Sony Ten 2 HD", url: "https://sonucdn-v2.pages.dev/star?id=STEN2HD" },
+      "32": { name: "Sony Ten 3 HD", url: "https://sonucdn-v2.pages.dev/star?id=STEN3HD" },
+      "33": { name: "Sony Ten 5 HD", url: "https://sonucdn-v2.pages.dev/star?id=STEN5HD" },
+
+      "34": { name: "Sony SET HD", url: "https://sonucdn-v2.pages.dev/star?id=SETHD" },
+      "35": { name: "Sony Max HD", url: "https://sonucdn-v2.pages.dev/star?id=SMAX" }
     };
 
-    /* =========================================================
-       ARJUN CRICKET UI
-       ========================================================= */
-    class CricXCrateUI extends HTMLElement {
-      constructor() {
-        super();
-        this.shadow = this.attachShadow({ mode: "closed" });
-        this.masterChannels = [];
-        this.currentStreamId = null;
-        this.isUnlocked = false;
-        this.lockTimer = null;
-        this.stars = [];
-        this.animationFrameId = null;
-        this.laterCount = 0;
-        this.initialPendingId = new URLSearchParams(window.location.search).get("id");
-
-        this.shadow.innerHTML = `
-<style>
-/* =========================================================
-VARIABLES
-========================================================= */
-:root {
-  --primary-rgb: 0, 255, 204;
-  --accent: rgb(var(--primary-rgb));
-  --accent-glow: rgba(var(--primary-rgb), 0.45);
-  --accent-glow-intense: rgba(var(--primary-rgb), 0.85);
-  --bg-pure: #050a0f;
-  --bg-card: rgba(12, 18, 28, 0.88);
-  --border-glass: rgba(0, 255, 204, 0.18);
-  --border-glass-bright: rgba(0, 255, 204, 0.4);
-  --heading-dynamic: #ffffff;
-  --text-main: #e0f2f1;
-  --text-muted: #78909c;
-  --text-dark: #455a64;
-  --btn-main-bg: #ffffff;
-  --btn-main-text: #050a0f;
-  --player-shadow: 0 45px 120px -20px rgba(0, 255, 204, 0.25);
-}
-
-/* =========================================================
-LIGHT THEME
-========================================================= */
-:host([data-theme="light"]) {
-  --primary-rgb: 0, 200, 180;
-  --accent: #00c8b4;
-  --accent-glow: rgba(0, 200, 180, 0.35);
-  --bg-pure: #f0f7f7;
-  --bg-card: rgba(255, 255, 255, 0.95);
-  --border-glass: rgba(0, 0, 0, 0.1);
-  --border-glass-bright: rgba(0, 0, 0, 0.25);
-  --heading-dynamic: #000000;
-  --text-main: #0a0f12;
-  --text-muted: #546e7a;
-  --text-dark: #90a4ae;
-  --btn-main-bg: #091015;
-  --btn-main-text: #ffffff;
-}
-
-/* =========================================================
-GLOBAL
-========================================================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-:host {
-  display: block;
-  width: 100%;
-  min-height: 100vh;
-  background: var(--bg-pure);
-  color: var(--text-main);
-  font-family: "Manrope", sans-serif;
-  position: relative;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* =========================================================
-BACKGROUND
-========================================================= */
-canvas#warpGridCanvas {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.85;
-}
-
-.container {
-  width: min(1500px, 92vw);
-  margin: 0 auto;
-  padding: 0 0 clamp(40px, 6vw, 100px);
-  position: relative;
-  z-index: 10;
-}
-
-/* =========================================================
-NAVIGATION
-========================================================= */
-.nav {
-  height: clamp(64px, 8.5vh, 96px);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  z-index: 50;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.brand-title {
-  font-family: "Space Grotesk", sans-serif;
-  font-size: clamp(20px, 2.2vw, 28px);
-  font-weight: 900;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--heading-dynamic);
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.live-pill-badge {
-  height: 38px;
-  padding: 0 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-glass);
-  backdrop-filter: blur(16px);
-  border-radius: 100px;
-  color: var(--text-muted);
-  font-family: "DM Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-}
-
-.pulsing-live-dot {
-  width: 6px;
-  height: 6px;
-  background: #ff2a2a;
-  border-radius: 50%;
-  box-shadow: 0 0 12px #ff2a2a;
-  animation: liveSignal 1.5s ease-in-out infinite;
-}
-
-@keyframes liveSignal {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.35; transform: scale(0.8); }
-}
-
-.nav-join-btn {
-  height: 38px;
-  padding: 0 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 100px;
-  background: var(--btn-main-bg);
-  color: var(--btn-main-text);
-  text-decoration: none;
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.nav-join-btn:hover {
-  background: var(--accent);
-  color: #000;
-  box-shadow: 0 0 20px var(--accent-glow);
-  transform: translateY(-2px);
-}
-
-/* =========================================================
-HERO
-========================================================= */
-.hero {
-  position: relative;
-  padding: clamp(20px, 3.5vw, 56px) 0 clamp(14px, 2.2vw, 36px);
-}
-
-.hero-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: "Space Grotesk", sans-serif;
-  color: var(--accent);
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-}
-
-.hero-tag::before {
-  content: "";
-  width: 28px;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 2px;
-}
-
-.hero-headline {
-  margin-top: 12px;
-  font-family: "Syne", sans-serif;
-  font-size: clamp(36px, 7.5vw, 92px);
-  line-height: 0.88;
-  letter-spacing: -0.06em;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.hero-headline .accent-txt {
-  color: var(--accent);
-  background: linear-gradient(135deg, #00ffcc 0%, #0096ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.hero-details {
-  margin-top: 16px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  color: var(--text-muted);
-  font-family: "DM Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-}
-
-.hero-details b {
-  color: var(--text-main);
-  font-weight: 600;
-}
-
-.meta-separator {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--text-dark);
-}
-
-.track-separator-beam {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--border-glass) 45%, transparent 100%);
-  margin-bottom: 24px;
-}
-
-/* =========================================================
-CHANNEL GRID
-========================================================= */
-.channels-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 24px;
-  margin-top: 24px;
-}
-
-.channel-card {
-  background: var(--bg-card);
-  border-radius: 18px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid var(--border-glass);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  backdrop-filter: blur(20px);
-}
-
-.channel-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: var(--accent);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 25px var(--accent-glow);
-}
-
-/* =========================================================
-THUMBNAIL
-========================================================= */
-.card-thumbnail {
-  width: 100%;
-  height: 155px;
-  background: radial-gradient(circle at center, rgba(12, 22, 35, 0.9) 0%, rgba(3, 7, 12, 0.98) 100%);
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  border-bottom: 1px solid var(--border-glass);
-}
-
-/* =========================================================
-CHANNEL LOGO
-========================================================= */
-.channel-logo-box {
-  width: 82px;
-  height: 82px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  z-index: 2;
-  transition: transform 0.3s ease;
-}
-
-.channel-card:hover .channel-logo-box {
-  transform: scale(1.1) rotate(3deg);
-}
-
-.channel-logo {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 10px;
-}
-
-/* =========================================================
-GENERIC BADGE
-========================================================= */
-.channel-badge-box {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: rgba(15, 25, 40, 0.9);
-  border: 1px solid var(--border-glass-bright);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-  z-index: 2;
-  transition: transform 0.3s ease;
-}
-
-.channel-card:hover .channel-badge-box {
-  transform: scale(1.1) rotate(5deg);
-}
-
-.channel-badge-box svg {
-  width: 26px;
-  height: 26px;
-  fill: var(--accent);
-}
-
-.card-network-tag {
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 13px;
-  font-weight: 800;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-top: 10px;
-  z-index: 2;
-}
-
-/* =========================================================
-PLAY ICON
-========================================================= */
-.play-overlay-icon {
-  position: absolute;
-  width: 52px;
-  height: 52px;
-  background: var(--accent);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: scale(0.6);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 10px 30px var(--accent-glow-intense);
-  z-index: 5;
-}
-
-.channel-card:hover .play-overlay-icon {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.play-overlay-icon svg {
-  width: 22px;
-  height: 22px;
-  fill: #000;
-  margin-left: 3px;
-}
-
-/* =========================================================
-CARD BODY
-========================================================= */
-.card-body {
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.card-title {
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-main);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-meta {
-  font-size: 11px;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: "DM Mono", monospace;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* =========================================================
-VIEWS
-========================================================= */
-.view-section {
-  display: none;
-}
-
-.view-section.active {
-  display: block;
-  animation: fadeInView 0.4s ease forwards;
-}
-
-@keyframes fadeInView {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* =========================================================
-PLAYER
-========================================================= */
-.player-top-nav {
-  margin-bottom: 16px;
-}
-
-.back-home-btn {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glass-bright);
-  color: var(--text-main);
-  padding: 10px 22px;
-  border-radius: 100px;
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  backdrop-filter: blur(16px);
-  transition: all 0.3s ease;
-}
-
-.back-home-btn:hover {
-  background: var(--accent);
-  color: #000;
-  box-shadow: 0 0 25px var(--accent-glow);
-  transform: translateX(-4px);
-}
-
-.player-rig-box {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  position: relative;
-  background: #000;
-  overflow: hidden;
-  border-radius: 24px;
-  border: 1px solid var(--border-glass-bright);
-  box-shadow: var(--player-shadow);
-  isolation: isolate;
-}
-
-.stream-loading-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  background: #000;
-  color: var(--text-muted);
-  font-family: "DM Mono", monospace;
-  font-size: 12px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.stream-loading-overlay.hidden {
-  display: none;
-}
-
-iframe#player {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-  position: relative;
-  z-index: 5;
-  object-fit: cover;
-}
-
-.player-rig-box.fs-active {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 9999999 !important;
-  border-radius: 0 !important;
-  border: none !important;
-  background: #000 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.player-rig-box.fs-active iframe#player {
-  width: 100vw !important;
-  height: 100vh !important;
-  object-fit: fill !important;
-}
-
-.blended-fs-btn {
-  position: absolute;
-  bottom: 14px;
-  right: 14px;
-  z-index: 30;
-  width: 38px;
-  height: 38px;
-  background: rgba(20, 20, 20, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(4px);
-}
-
-.blended-fs-btn:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  transform: scale(1.08);
-}
-
-.blended-fs-btn svg {
-  width: 16px;
-  height: 16px;
-  fill: #fff;
-}
-
-/* =========================================================
-PLAYER META
-========================================================= */
-.player-meta-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding-top: 20px;
-  flex-wrap: wrap;
-}
-
-.stream-title-group strong {
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  display: block;
-}
-
-.stream-title-group span {
-  font-family: "Space Grotesk", sans-serif;
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-}
-
-.share-action-btn {
-  height: 44px;
-  padding: 0 24px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 100px;
-  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 255, 204, 0.16) 100%);
-  border: 1px solid var(--accent);
-  color: var(--text-main);
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.share-action-btn:hover {
-  background: var(--accent);
-  color: #000;
-}
-
-/* =========================================================
-TELEGRAM MODAL
-========================================================= */
-.tg-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(3, 7, 12, 0.95);
-  backdrop-filter: blur(20px);
-  z-index: 999999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.tg-modal-overlay.show {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.tg-modal-box {
-  position: relative;
-  background: var(--bg-card);
-  border-radius: 22px;
-  padding: 32px 28px;
-  text-align: center;
-  max-width: 390px;
-  width: 90%;
-  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.9), 0 0 40px var(--accent-glow);
-  transform: scale(0.85);
-  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-  backdrop-filter: blur(24px);
-  overflow: hidden;
-}
-
-.tg-modal-box::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  border-radius: 24px;
-  background: conic-gradient(from 0deg at 50% 50%, transparent 0%, transparent 70%, var(--accent) 90%, #ffffff 100%);
-  animation: borderSpin 3s linear infinite;
-  z-index: -1;
-}
-
-.tg-modal-box::after {
-  content: "";
-  position: absolute;
-  inset: 1px;
-  border-radius: 21px;
-  background: #0c121c;
-  z-index: -1;
-}
-
-@keyframes borderSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.tg-modal-overlay.show .tg-modal-box {
-  transform: scale(1);
-}
-
-.tg-modal-title {
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--heading-dynamic);
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.tg-modal-desc {
-  font-size: 13.5px;
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 24px;
-  font-family: "Manrope", sans-serif;
-}
-
-.tg-modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
-}
-
-.tg-modal-btn-later {
-  flex: 1;
-  height: 46px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-main);
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 13px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid var(--border-glass);
-}
-
-.tg-modal-btn-later:hover {
-  background: var(--border-glass-bright);
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-.tg-modal-btn-join {
-  flex: 1;
-  height: 46px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #00ffcc 0%, #0096ff 100%);
-  color: #000;
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 13px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  box-shadow: 0 8px 25px var(--accent-glow);
-}
-
-.tg-modal-btn-join:hover {
-  filter: brightness(1.1);
-  transform: translateY(-2px);
-}
-
-/* =========================================================
-THEME
-========================================================= */
-.theme-switch-deck {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 900;
-  background: var(--bg-card);
-  border: 1px solid var(--border-glass-bright);
-  border-radius: 100px;
-  backdrop-filter: blur(24px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-}
-
-.theme-switch-deck.hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(20px);
-}
-
-.mode-toggle-btn {
-  height: 32px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 0;
-  background: transparent;
-  color: var(--text-muted);
-  font-family: "DM Mono", monospace;
-  font-size: 8px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.mode-toggle-btn i {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.mode-toggle-btn.active {
-  background: var(--accent);
-  color: #000;
-}
-
-/* =========================================================
-STATES
-========================================================= */
-.state-container {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 100px 20px;
-  text-align: center;
-  gap: 16px;
-  color: var(--text-muted);
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.08);
-  border-left-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* =========================================================
-MOBILE
-========================================================= */
-@media (max-width: 600px) {
-  .container { width: 92vw; }
-  .live-pill-badge { display: none; }
-  .nav-join-btn { padding: 0 14px; font-size: 10px; }
-  .channels-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
+    this.currentChannelId = "2";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedId = urlParams.get('id');
+
+    if (sharedId && this.CHANNELS[sharedId]) {
+      this.currentChannelId = sharedId;
+    }
+
+    this.CONFIG = {
+      telegramLink: "https://t.me/arjuncricket18",
+      streamManifest: this.CHANNELS[this.currentChannelId].url,
+    };
+
+    this.lockTimer = null;
+    this.PREVIEW_TIME = 5 * 60 * 1000;
+    this.animationFrameId = null;
+    this.stars = [];
+
+    this.boundResize = () => {
+      const canvas = this._shadow.getElementById('warpGridCanvas');
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    };
+
+    this.msgHandler = (e) => {
+      if (e.data === 'arjuncricket-fs-enter') {
+        const rig = this._shadow.getElementById('playerContainer');
+
+        if (rig) {
+          rig.classList.add('fs-active');
+
+          try {
+            if (rig.requestFullscreen)
+              rig.requestFullscreen().catch(()=>{});
+            else if (rig.webkitRequestFullscreen)
+              rig.webkitRequestFullscreen();
+
+            if (screen.orientation && screen.orientation.lock)
+              screen.orientation.lock('landscape').catch(()=>{});
+          } catch(err) {}
+        }
+
+      } else if (e.data === 'arjuncricket-fs-exit') {
+        const rig = this._shadow.getElementById('playerContainer');
+
+        if (rig) {
+          rig.classList.remove('fs-active');
+
+          try {
+            if (document.fullscreenElement)
+              document.exitFullscreen().catch(()=>{});
+            else if (document.webkitFullscreenElement)
+              document.webkitExitFullscreen();
+
+            if (screen.orientation && screen.orientation.unlock)
+              screen.orientation.unlock();
+          } catch(err) {}
+        }
+      }
+    };
+
+    this.nativeFsHandler = () => {
+      const rig = this._shadow.getElementById('playerContainer');
+
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (rig) rig.classList.remove('fs-active');
+      }
+    };
   }
-  .card-thumbnail { height: 120px; }
-  .channel-logo-box {
-    width: 65px;
-    height: 65px;
-    padding: 8px;
-    border-radius: 14px;
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'stream-url' && oldValue !== newValue && newValue) {
+      this.CONFIG.streamManifest = newValue;
+      this.setupIframePlayer();
+    }
   }
-  .card-body { padding: 12px; }
-  .card-title { font-size: 13px; }
-  .card-meta { font-size: 8px; }
-  .player-rig-box { border-radius: 14px; }
-  .player-meta-bar { align-items: flex-start; }
-  .share-action-btn { width: 100%; justify-content: center; }
-  .theme-switch-deck { right: 10px; bottom: 10px; }
-}
-</style>
 
-<!-- =====================================================
-CANVAS
-===================================================== -->
-<canvas id="warpGridCanvas"></canvas>
+  async connectedCallback() {
+    await this.render();
 
-<!-- =====================================================
-MAIN
-===================================================== -->
-<div class="container" id="mainContainer">
-  <header class="nav">
-    <a class="brand" id="brandHomeLink">
-      <div class="brand-title">ARJUN CRICKET</div>
-    </a>
-    <div class="nav-actions">
-      <div class="live-pill-badge">
-        <i class="pulsing-live-dot"></i>
-        ON AIR
-      </div>
-      <a class="nav-join-btn" id="navJoinBtn" href="#" target="_blank" rel="noopener">
-        JOIN TG
-      </a>
-    </div>
-  </header>
+    this.initWarpField();
+    this.initThemeSwitching();
+    this.initEventListeners();
+    this.setupIframePlayer();
 
-  <!-- =====================================================
-  HOME
-  ===================================================== -->
-  <div id="home-view" class="view-section ${this.initialPendingId ? '' : 'active'}">
-    <section class="hero">
-      <div class="hero-tag">LIVE BROADCASTS</div>
-      <h1 class="hero-headline">
-        SPORTS
-        <br>
-        <span class="accent-txt">CHANNELS.</span>
-      </h1>
-      <div class="hero-details">
-        <b>MASTER DATABASE</b>
-        <span class="meta-separator"></span>
-        ALL CHANNELS LIVE
-        <span class="meta-separator"></span>
-        SELECT TO WATCH
-      </div>
-    </section>
-    <div class="track-separator-beam"></div>
-    <div id="channels-grid" class="channels-grid">
-      <div class="state-container">
-        <div class="spinner"></div>
-        <p>Fetching professional sports feed...</p>
-      </div>
-    </div>
-  </div>
+    const targetBtn = this._shadow.querySelector(
+      `[data-chid="${this.currentChannelId}"]`
+    );
 
-  <!-- =====================================================
-  PLAYER
-  ===================================================== -->
-  <div id="player-view" class="view-section ${this.initialPendingId ? 'active' : ''}">
-    <div class="player-top-nav">
-      <button class="back-home-btn" id="backHomeBtn">← Back to Channels</button>
-    </div>
-    <div class="player-rig-box" id="playerContainer">
-      <div class="stream-loading-overlay ${this.initialPendingId ? '' : 'hidden'}" id="streamLoadingOverlay">
-        <div class="spinner"></div>
-        <span>Connecting to stream...</span>
-      </div>
-      <iframe id="player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen="true"></iframe>
-      <button class="blended-fs-btn" id="blendedFsBtn" title="Toggle Fullscreen">
-        <svg id="fsIconSvg" viewBox="0 0 24 24">
-          <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-        </svg>
-      </button>
-    </div>
-    <div class="player-meta-bar">
-      <div class="stream-title-group">
-        <strong id="activeStreamTitleDisplay">Live Broadcast</strong>
-        <span>ARJUN CRICKET High-Definition Stream</span>
-      </div>
-      <button class="share-action-btn" id="btnShare">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <line x1="7" y1="17" x2="17" y2="7"></line>
-          <polyline points="7 7 17 7 17 17"></polyline>
-        </svg>
-        <span id="shareBtnText">SHARE STREAM</span>
-      </button>
-    </div>
-  </div>
-</div>
+    if (targetBtn) {
+      const allBtns = this._shadow.querySelectorAll('.channel-btn');
+      allBtns.forEach(b => b.classList.remove('active'));
+      targetBtn.classList.add('active');
 
-<!-- =====================================================
-TELEGRAM MODAL
-===================================================== -->
-<div class="tg-modal-overlay" id="tgPremiumModal">
-  <div class="tg-modal-box">
-    <h3 class="tg-modal-title">ARJUN CRICKET</h3>
-    <p class="tg-modal-desc" id="tgModalDesc">
-      Join our Telegram for more stream links and updates.
-    </p>
-    <div class="tg-modal-actions">
-      <div class="tg-modal-btn-later" id="tgLaterModalBtn">Later</div>
-      <div class="tg-modal-btn-join" id="tgJoinModalBtn">Join Telegram</div>
-    </div>
-  </div>
-</div>
+      const parentGrid = targetBtn.closest('.channel-grid');
 
-<!-- =====================================================
-THEME
-===================================================== -->
-<aside class="theme-switch-deck" id="themeSwitchDeck">
-  <button class="mode-toggle-btn active" id="themeDarkBtn">
-    <i></i>
-    Obsidian
-  </button>
-  <button class="mode-toggle-btn" id="themeLightBtn">
-    <i></i>
-    Ceramic
-  </button>
-</aside>
-`;
-      }
+      if (parentGrid) {
+        const gridId = parentGrid.id;
+        const tabs = this._shadow.querySelectorAll('.cat-tab');
 
-      /* =====================================================
-         CONNECTED
-         ===================================================== */
-      connectedCallback() {
-        this.shadow.querySelector("#navJoinBtn").href = window.CricConfig.telegramLink;
-        this.checkUnlockStatus();
-        this.initWarpField();
-        this.initEventListeners();
-        this.setupMessageListener();
-        this.fetchChannels();
-        window.addEventListener("popstate", () => this.handleUrlRouting());
-      }
-
-      disconnectedCallback() {
-        if (this.animationFrameId) {
-          cancelAnimationFrame(this.animationFrameId);
-        }
-        if (this.lockTimer) {
-          clearTimeout(this.lockTimer);
-        }
-      }
-
-      /* =====================================================
-         UNLOCK STATUS
-         ===================================================== */
-      checkUnlockStatus() {
-        const saved = localStorage.getItem("cricxcrate_unlocked_time");
-        if (saved) {
-          if (Date.now() - parseInt(saved, 10) < 24 * 60 * 60 * 1000) {
-            this.isUnlocked = true;
+        tabs.forEach(t => {
+          if (t.getAttribute('data-target') === gridId) {
+            t.classList.add('active');
+            parentGrid.classList.add('active');
           } else {
-            localStorage.removeItem("cricxcrate_unlocked_time");
-          }
-        }
-        if (!this.isUnlocked) {
-          setTimeout(() => {
-            const desc = this.shadow.querySelector("#tgModalDesc");
-            const modal = this.shadow.querySelector("#tgPremiumModal");
-            if (desc) {
-              desc.innerText = "Join Our Telegram Channel For 24-Hour Full Access To Uninterrupted HD Live Streams And Updates.";
-            }
-            if (modal) {
-              modal.classList.add("show");
-            }
-          }, 200);
-        }
-      }
-
-      /* =====================================================
-         FETCH CHANNELS
-         ===================================================== */
-      async fetchChannels() {
-        const grid = this.shadow.querySelector("#channels-grid");
-        try {
-          const res = await fetch(window.CricConfig.sourceUrl);
-          if (!res.ok) {
-            throw new Error("HTTP " + res.status);
-          }
-          const data = await res.json();
-          this.masterChannels = Array.isArray(data)
-            ? data
-            : (data.iframes || data.channels || data.streams || data.data ||
-              (data && typeof data === "object"
-                ? Object.entries(data).map(([id, url]) => ({ id, name: id, title: id, url }))
-                : []));
-          if (this.masterChannels.length === 0) {
-            grid.innerHTML = `<div class="state-container">No channels found.</div>`;
-            return;
-          }
-          this.renderGrid();
-          this.handleUrlRouting();
-        } catch (err) {
-          console.error("Channel feed error:", err);
-          grid.innerHTML = `<div class="state-container" style="color:#ef4444;">Failed to load channels feed.</div>`;
-          if (this.initialPendingId) {
-            this.closePlayer();
-          }
-        }
-      }
-
-      /* =====================================================
-         RENDER GRID
-         ===================================================== */
-      renderGrid() {
-        const grid = this.shadow.querySelector("#channels-grid");
-        grid.innerHTML = "";
-        this.masterChannels.forEach((channel, index) => {
-          const channelId = channel.id !== undefined ? channel.id : index;
-          const title = channel.title || channel.name || channel.channel || `Channel ${index + 1}`;
-          const poster = channel.poster || channel.image || channel.logo || channel.img || "";
-          const lowerTitle = title.toLowerCase();
-          const isSony = lowerTitle.includes("sony");
-          const isStar = lowerTitle.includes("star");
-          let tagText = title.split(" ")[0] || "LIVE";
-          let thumbHtml = "";
-
-          if (isStar) {
-            tagText = "STAR";
-            thumbHtml = `
-              <div class="card-thumbnail">
-                <div class="channel-logo-box">
-                  <img class="channel-logo" src="${window.CricConfig.starLogo}" alt="Star Sports" loading="lazy" referrerpolicy="no-referrer">
-                </div>
-                <span class="card-network-tag">STAR</span>
-                <div class="play-overlay-icon">
-                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-              </div>`;
-          } else if (isSony) {
-            tagText = "SONY";
-            thumbHtml = `
-              <div class="card-thumbnail">
-                <div class="channel-logo-box">
-                  <img class="channel-logo" src="${window.CricConfig.sonyLogo}" alt="Sony Sports" loading="lazy" referrerpolicy="no-referrer">
-                </div>
-                <span class="card-network-tag">SONY</span>
-                <div class="play-overlay-icon">
-                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-              </div>`;
-          } else if (poster) {
-            thumbHtml = `
-              <div class="card-thumbnail" style="background-image: url('${poster.replace(/'/g, "%27")}')">
-                <div class="play-overlay-icon">
-                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-              </div>`;
-          } else {
-            const badgeIcon = `
-              <svg viewBox="0 0 24 24">
-                <path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/>
-              </svg>`;
-            thumbHtml = `
-              <div class="card-thumbnail">
-                <div class="channel-badge-box">${badgeIcon}</div>
-                <span class="card-network-tag">${this.escapeHtml(tagText)}</span>
-                <div class="play-overlay-icon">
-                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-              </div>`;
-          }
-
-          const card = document.createElement("div");
-          card.className = "channel-card";
-          card.onclick = () => this.openPlayer(channelId);
-          card.innerHTML = `
-            ${thumbHtml}
-            <div class="card-body">
-              <div class="card-title">${this.escapeHtml(title)}</div>
-              <div class="card-meta">
-                <span>HD FEED</span>
-                <span style="color: var(--accent);">WATCH NOW</span>
-              </div>
-            </div>`;
-          grid.appendChild(card);
-        });
-      }
-
-      /* =====================================================
-         ESCAPE HTML
-         ===================================================== */
-      escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-      }
-
-      /* =====================================================
-         OPEN PLAYER
-         ===================================================== */
-      openPlayer(identifier) {
-        const target = this.masterChannels.find((ch, idx) => ch.id == identifier || idx == identifier);
-        if (!target) {
-          this.closePlayer();
-          return;
-        }
-        let streamUrl = target.iframeSrc || target.url || target.link || target.stream || target.file || target.source || target.src;
-        if (!streamUrl) {
-          streamUrl = `https://sonucdn-v2.pages.dev/star.html?id=${encodeURIComponent(target.id || identifier)}`;
-        }
-        const title = target.title || target.name || target.channel || "Live Broadcast";
-        this.currentStreamId = identifier;
-        this.shadow.querySelector("#activeStreamTitleDisplay").innerText = title;
-        this.shadow.querySelector("#player").src = streamUrl;
-        const loadingOverlay = this.shadow.querySelector("#streamLoadingOverlay");
-        if (loadingOverlay) {
-          loadingOverlay.classList.add("hidden");
-        }
-        this.shadow.querySelector("#home-view").classList.remove("active");
-        this.shadow.querySelector("#player-view").classList.add("active");
-        if (!this.isUnlocked) {
-          if (this.lockTimer) {
-            clearTimeout(this.lockTimer);
-          }
-          this.lockTimer = setTimeout(() => this.triggerLock(), window.CricConfig.previewDuration);
-        }
-        const query = `?id=${encodeURIComponent(identifier)}`;
-        if (window.location.search !== query) {
-          history.pushState({ playerOpen: true, id: identifier }, "", query);
-        }
-        window.scrollTo(0, 0);
-      }
-
-      /* =====================================================
-         CLOSE PLAYER
-         ===================================================== */
-      closePlayer() {
-        this.shadow.querySelector("#player").src = "about:blank";
-        const loadingOverlayEl = this.shadow.querySelector("#streamLoadingOverlay");
-        if (loadingOverlayEl) {
-          loadingOverlayEl.classList.add("hidden");
-        }
-        if (this.lockTimer) {
-          clearTimeout(this.lockTimer);
-          this.lockTimer = null;
-        }
-        this.shadow.querySelector("#tgPremiumModal").classList.remove("show");
-        try {
-          if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
-          }
-        } catch (err) {}
-        this.shadow.querySelector("#playerContainer").classList.remove("fs-active");
-        this.shadow.querySelector("#themeSwitchDeck").classList.remove("hidden");
-        this.shadow.querySelector("#player-view").classList.remove("active");
-        this.shadow.querySelector("#home-view").classList.add("active");
-        this.currentStreamId = null;
-        if (window.location.search !== "") {
-          history.pushState({}, "", window.location.pathname);
-        }
-      }
-
-      /* =====================================================
-         URL ROUTING
-         ===================================================== */
-      handleUrlRouting() {
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id");
-        if (id !== null && this.masterChannels.length > 0) {
-          this.openPlayer(id);
-        } else if (id === null && this.currentStreamId !== null) {
-          this.closePlayer();
-        }
-      }
-
-      /* =====================================================
-         LOCK
-         ===================================================== */
-      triggerLock() {
-        if (this.isUnlocked) return;
-        const iframe = this.shadow.querySelector("#player");
-        try {
-          if (iframe && iframe.contentWindow) {
-            iframe.contentWindow.postMessage("cricxcrate-force-pause", "*");
-          }
-        } catch (e) {}
-        try {
-          if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
-          }
-        } catch (err) {}
-        this.shadow.querySelector("#tgModalDesc").innerText = "Free Preview Ended! Join Our Telegram To Unlock 24-Hour Uninterrupted Access With Zero Locks.";
-        this.shadow.querySelector("#tgPremiumModal").classList.add("show");
-      }
-
-      /* =====================================================
-         TELEGRAM
-         ===================================================== */
-      handleJoinTelegram() {
-        localStorage.setItem("cricxcrate_unlocked_time", Date.now().toString());
-        this.isUnlocked = true;
-        this.shadow.querySelector("#tgPremiumModal").classList.remove("show");
-        window.open(window.CricConfig.telegramLink, "_blank", "noopener");
-        const laterBtn = this.shadow.querySelector("#tgLaterModalBtn");
-        if (laterBtn) {
-          laterBtn.style.display = "flex";
-        }
-        const iframe = this.shadow.querySelector("#player");
-        try {
-          if (iframe && iframe.contentWindow) {
-            iframe.contentWindow.postMessage("cricxcrate-force-play", "*");
-          }
-        } catch (e) {}
-      }
-
-      /* =====================================================
-         LATER
-         ===================================================== */
-      handleLater() {
-        this.laterCount++;
-        if (this.laterCount >= 2) {
-          const laterBtn = this.shadow.querySelector("#tgLaterModalBtn");
-          if (laterBtn) {
-            laterBtn.style.display = "none";
-          }
-          this.shadow.querySelector("#tgModalDesc").innerText = "Access Limit Reached! Please Join Our Telegram Channel To Proceed.";
-          return;
-        }
-        this.shadow.querySelector("#tgPremiumModal").classList.remove("show");
-        const iframe = this.shadow.querySelector("#player");
-        try {
-          if (iframe && iframe.contentWindow) {
-            iframe.contentWindow.postMessage("cricxcrate-force-play", "*");
-          }
-        } catch (e) {}
-      }
-
-      /* =====================================================
-         FULLSCREEN
-         ===================================================== */
-      toggleFullscreen() {
-        const rig = this.shadow.querySelector("#playerContainer");
-        const themeDeck = this.shadow.querySelector("#themeSwitchDeck");
-        const fsIconSvg = this.shadow.querySelector("#fsIconSvg");
-        if (!rig) return;
-        const isFull = document.fullscreenElement || rig.classList.contains("fs-active");
-        if (!isFull) {
-          rig.classList.add("fs-active");
-          if (themeDeck) {
-            themeDeck.classList.add("hidden");
-          }
-          if (fsIconSvg) {
-            fsIconSvg.innerHTML = `<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>`;
-          }
-          try {
-            if (rig.requestFullscreen) {
-              rig.requestFullscreen().catch(() => {});
-            }
-          } catch (err) {}
-        } else {
-          rig.classList.remove("fs-active");
-          if (themeDeck) {
-            themeDeck.classList.remove("hidden");
-          }
-          if (fsIconSvg) {
-            fsIconSvg.innerHTML = `<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>`;
-          }
-          try {
-            if (document.exitFullscreen) {
-              document.exitFullscreen().catch(() => {});
-            }
-          } catch (err) {}
-        }
-      }
-
-      /* =====================================================
-         MESSAGE LISTENER
-         ===================================================== */
-      setupMessageListener() {
-        window.addEventListener("message", (e) => {
-          if (e.data === "cricxcrate-playing" && !this.isUnlocked && !this.lockTimer) {
-            this.lockTimer = setTimeout(() => this.triggerLock(), window.CricConfig.previewDuration);
-          }
-        });
-        document.addEventListener("fullscreenchange", () => {
-          const rig = this.shadow.querySelector("#playerContainer");
-          const themeDeck = this.shadow.querySelector("#themeSwitchDeck");
-          const fsIconSvg = this.shadow.querySelector("#fsIconSvg");
-          if (!document.fullscreenElement && !document.webkitIsFullScreen && rig) {
-            rig.classList.remove("fs-active");
-            if (themeDeck) {
-              themeDeck.classList.remove("hidden");
-            }
-            if (fsIconSvg) {
-              fsIconSvg.innerHTML = `<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>`;
-            }
+            t.classList.remove('active');
           }
         });
       }
 
-      /* =====================================================
-         EVENT LISTENERS
-         ===================================================== */
-      initEventListeners() {
-        this.shadow.querySelector("#backHomeBtn").onclick = () => this.closePlayer();
-        this.shadow.querySelector("#brandHomeLink").onclick = () => this.closePlayer();
-        this.shadow.querySelector("#tgJoinModalBtn").onclick = () => this.handleJoinTelegram();
-        this.shadow.querySelector("#tgLaterModalBtn").onclick = () => this.handleLater();
-        this.shadow.querySelector("#blendedFsBtn").onclick = () => this.toggleFullscreen();
+      const titleElem =
+        this._shadow.getElementById('currentChannelTitle');
 
-        /* DARK THEME */
-        this.shadow.querySelector("#themeDarkBtn").onclick = () => {
-          this.removeAttribute("data-theme");
-          this.shadow.querySelector("#themeDarkBtn").classList.add("active");
-          this.shadow.querySelector("#themeLightBtn").classList.remove("active");
-        };
-
-        /* LIGHT THEME */
-        this.shadow.querySelector("#themeLightBtn").onclick = () => {
-          this.setAttribute("data-theme", "light");
-          this.shadow.querySelector("#themeLightBtn").classList.add("active");
-          this.shadow.querySelector("#themeDarkBtn").classList.remove("active");
-        };
-
-        /* SHARE */
-        const btnShare = this.shadow.querySelector("#btnShare");
-        const shareText = this.shadow.querySelector("#shareBtnText");
-        btnShare.onclick = async () => {
-          try {
-            if (navigator.share) {
-              await navigator.share({
-                title: "ARJUN CRICKET Live",
-                url: window.location.href
-              });
-            } else {
-              await navigator.clipboard.writeText(window.location.href);
-              shareText.textContent = "COPIED!";
-              setTimeout(() => {
-                shareText.textContent = "SHARE STREAM";
-              }, 1800);
-            }
-          } catch (err) {}
-        };
-      }
-
-      /* =====================================================
-         WARP FIELD
-         ===================================================== */
-      initWarpField() {
-        const canvas = this.shadow.getElementById("warpGridCanvas");
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        const resize = () => {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-        };
-        window.addEventListener("resize", resize);
-        resize();
-        for (let i = 0; i < 100; i++) {
-          this.stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            length: Math.random() * 20 + 10,
-            speed: Math.random() * 2 + 1,
-            alpha: Math.random() * 0.5 + 0.1
-          });
-        }
-        const render = () => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.lineWidth = 1.2;
-          this.stars.forEach((star) => {
-            ctx.strokeStyle = `rgba(0, 255, 204, ${star.alpha})`;
-            ctx.beginPath();
-            ctx.moveTo(star.x, star.y);
-            ctx.lineTo(star.x + star.length, star.y);
-            ctx.stroke();
-            star.x += star.speed;
-            if (star.x > canvas.width) {
-              star.x = -star.length;
-              star.y = Math.random() * canvas.height;
-            }
-          });
-          this.animationFrameId = requestAnimationFrame(render);
-        };
-        render();
+      if (titleElem) {
+        titleElem.textContent =
+          `${this.CHANNELS[this.currentChannelId].name} · Live Broadcast`;
       }
     }
 
-    /* =========================================================
-       REGISTER CUSTOM ELEMENT
-       ========================================================= */
-    customElements.define("cricxcrate-ui", CricXCrateUI);
-  </script>
-  <!-- =======================================================
-  ARJUN CRICKET
-  ======================================================= -->
-  <cricxcrate-ui>
-  </cricxcrate-ui>
+    window.addEventListener('message', this.msgHandler);
+    document.addEventListener('fullscreenchange', this.nativeFsHandler);
+    document.addEventListener(
+      'webkitfullscreenchange',
+      this.nativeFsHandler
+    );
+
+    setTimeout(() => {
+      const modal1 = this._shadow.getElementById('tgModalOne');
+
+      if (modal1)
+        modal1.classList.add('show');
+    }, 1000);
+
+    this.check5MinLockStatus();
+  }
+
+  disconnectedCallback() {
+    if (this.animationFrameId)
+      cancelAnimationFrame(this.animationFrameId);
+
+    if (this.lockTimer)
+      clearTimeout(this.lockTimer);
+
+    window.removeEventListener('resize', this.boundResize);
+    window.removeEventListener('message', this.msgHandler);
+    document.removeEventListener(
+      'fullscreenchange',
+      this.nativeFsHandler
+    );
+    document.removeEventListener(
+      'webkitfullscreenchange',
+      this.nativeFsHandler
+    );
+  }
+
+  async render() {
+    this._shadow.innerHTML = `
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;600;700;800;900&family=Space+Grotesk:wght@500;700;800;900&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+      <style>
+        :host {
+          --primary-rgb: 255, 2, 102;
+          --secondary-rgb: 255, 117, 151;
+          --accent: #FF0266;
+          --accent-glow: rgba(255, 2, 102, 0.25);
+          --accent-glow-intense: rgba(255, 2, 102, 0.6);
+          --bg-pure: #fbf0f4;
+          --bg-card: rgba(255, 255, 255, 0.88);
+          --border-glass: rgba(0, 0, 0, 0.06);
+          --border-glass-bright: rgba(255, 2, 102, 0.25);
+          --heading-dynamic: #1a050d;
+          --text-main: #2d0a16;
+          --text-muted: #8a5a6b;
+          --text-dark: #b88a9a;
+          --btn-main-bg: #1a050d;
+          --btn-main-text: #ffffff;
+          --player-shadow: 0 30px 80px -20px rgba(255, 2, 102, 0.15);
+
+          display: block;
+          position: relative;
+          width: 100%;
+          min-height: 100vh;
+          background:
+            radial-gradient(
+              circle at 50% 0%,
+              rgba(255, 2, 102, 0.08) 0%,
+              transparent 65%
+            ),
+            var(--bg-pure);
+          color: var(--text-main);
+          font-family: 'Manrope', sans-serif;
+          overflow-x: hidden;
+          font-size: clamp(14px, 0.8vw + 0.45rem, 22px);
+          box-sizing: border-box;
+        }
+
+        :host([data-theme="dark"]) {
+          --primary-rgb: 255, 2, 102;
+          --accent: #FF0266;
+          --accent-glow: rgba(255, 2, 102, 0.35);
+          --accent-glow-intense: rgba(255, 2, 102, 0.75);
+          --bg-pure: #09131c;
+          --bg-card: rgba(24, 32, 45, 0.75);
+          --border-glass: rgba(255, 2, 102, 0.16);
+          --border-glass-bright: rgba(255, 2, 102, 0.4);
+          --heading-dynamic: #ffffff;
+          --text-main: #fce4ec;
+          --text-muted: #c4a1b0;
+          --text-dark: #826170;
+          --btn-main-bg: #ffffff;
+          --btn-main-text: #09131c;
+          --player-shadow: 0 35px 100px -20px rgba(255, 2, 102, 0.22);
+        }
+
+        *, *::before, *::after {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+
+        #warpGridCanvas {
+          position: fixed;
+          inset: 0;
+          width: 100vw;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 0;
+          opacity: 0.3;
+        }
+
+        .container {
+          width: min(1400px, 92vw);
+          margin: 0 auto;
+          padding: 0 0 clamp(40px, 6vw, 100px);
+          position: relative;
+          z-index: 10;
+        }
+
+        .nav {
+          height: clamp(64px, 8.5vh, 96px);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: relative;
+          z-index: 50;
+        }
+
+        .brand {
+          display: inline-flex;
+          align-items: center;
+          gap: clamp(10px, 1.2vw, 16px);
+          text-decoration: none;
+        }
+
+        .brand-title {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(18px, 2vw, 24px);
+          font-weight: 900;
+          letter-spacing: 0.8px;
+          text-transform: uppercase;
+          color: var(--heading-dynamic);
+          transition: color 0.25s ease;
+        }
+
+        .nav-actions {
+          display: flex;
+          align-items: center;
+          gap: clamp(8px, 1vw, 14px);
+        }
+
+        .live-pill-badge {
+          height: clamp(30px, 2.5vw, 36px);
+          padding: 0 clamp(10px, 1vw, 14px);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
+          backdrop-filter: blur(16px);
+          border-radius: 50px;
+          color: var(--text-muted);
+          font-family: 'DM Mono', monospace;
+          font-size: clamp(7.5px, 0.65vw, 9.5px);
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
+        }
+
+        .pulsing-live-dot {
+          width: 5px;
+          height: 5px;
+          background: #FF0266;
+          border-radius: 50%;
+          box-shadow: 0 0 10px #FF0266;
+          animation: liveSignal 1.5s ease-in-out infinite;
+        }
+
+        @keyframes liveSignal {
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.35;
+            transform: scale(0.8);
+          }
+        }
+
+        .nav-join-btn {
+          height: clamp(30px, 2.5vw, 36px);
+          padding: 0 clamp(14px, 1.3vw, 20px);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50px;
+          background: var(--btn-main-bg);
+          color: var(--btn-main-text);
+          text-decoration: none;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(10px, 0.8vw, 12px);
+          font-weight: 800;
+          letter-spacing: 0.8px;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-join-btn:hover {
+          background: var(--accent);
+          color: #fff;
+          box-shadow: 0 0 20px var(--accent-glow);
+          transform: translateY(-2px);
+        }
+
+        .hero {
+          position: relative;
+          padding: clamp(16px, 3vw, 36px) 0 clamp(12px, 1.8vw, 24px);
+        }
+
+        .hero-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-family: 'Space Grotesk', sans-serif;
+          color: var(--accent);
+          font-size: clamp(11px, 0.95vw, 13px);
+          font-weight: 800;
+          letter-spacing: 2.2px;
+          text-transform: uppercase;
+        }
+
+        .hero-tag::before {
+          content: "";
+          width: clamp(16px, 1.8vw, 26px);
+          height: 2px;
+          background: var(--accent);
+          border-radius: 50px;
+        }
+
+        .hero-headline {
+          margin-top: clamp(6px, 1vw, 10px);
+          font-family: 'Syne', sans-serif;
+          font-size: clamp(24px, 4.5vw, 52px);
+          line-height: 1.05;
+          letter-spacing: -0.03em;
+          font-weight: 900;
+          text-transform: uppercase;
+        }
+
+        .hero-headline .accent-txt {
+          color: var(--accent);
+          background: linear-gradient(135deg, #FF0266 0%, #FF7597 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .channel-switcher-section {
+          margin: 14px 0 8px;
+        }
+
+        .category-tabs {
+          display: flex;
+          gap: 6px;
+          margin-bottom: 10px;
+          flex-wrap: wrap;
+        }
+
+        .cat-tab {
+          background: rgba(0, 0, 0, 0.03);
+          border: 1px solid var(--border-glass);
+          border-radius: 50px;
+          padding: 5px 12px;
+          color: var(--text-muted);
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 10.5px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          text-transform: uppercase;
+        }
+
+        .cat-tab:hover {
+          color: var(--text-main);
+          border-color: var(--accent);
+        }
+
+        .cat-tab.active {
+          background: var(--accent);
+          color: #fff;
+          border-color: var(--accent);
+          box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .channel-grids-container {
+          position: relative;
+          min-height: 45px;
+        }
+
+        .channel-grid {
+          display: none;
+          flex-wrap: wrap;
+          gap: 6px;
+          max-height: 140px;
+          overflow-y: auto;
+          padding-right: 4px;
+        }
+
+        .channel-grid.active {
+          display: flex;
+        }
+
+        .channel-grid::-webkit-scrollbar {
+          width: 3px;
+        }
+
+        .channel-grid::-webkit-scrollbar-thumb {
+          background: var(--accent);
+          border-radius: 10px;
+        }
+
+        .channel-btn {
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass);
+          border-radius: 50px;
+          padding: 5px 10px;
+          color: var(--text-main);
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 10px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          backdrop-filter: blur(10px);
+        }
+
+        .channel-btn:hover {
+          border-color: var(--accent);
+          color: var(--accent);
+          transform: translateY(-1px);
+        }
+
+        .channel-btn.active {
+          background: var(--accent);
+          color: #fff;
+          border-color: var(--accent);
+          box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .hero-details {
+          margin-top: clamp(8px, 1vw, 14px);
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: clamp(6px, 0.8vw, 10px);
+          color: var(--text-muted);
+          font-family: 'DM Mono', monospace;
+          font-size: clamp(7.5px, 0.65vw, 9.5px);
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
+        }
+
+        .hero-details b {
+          color: var(--text-main);
+          font-weight: 600;
+        }
+
+        .meta-separator {
+          width: 3px;
+          height: 3px;
+          border-radius: 50%;
+          background: var(--text-dark);
+        }
+
+        .track-separator-beam {
+          width: 100%;
+          height: 1px;
+          background: linear-gradient(
+            90deg,
+            var(--accent) 0%,
+            var(--border-glass) 40%,
+            transparent 100%
+          );
+          margin-bottom: clamp(10px, 1.2vw, 16px);
+        }
+
+        .player-rig-box {
+          width: 100%;
+          aspect-ratio: 16/9;
+          position: relative;
+          background: #000;
+          overflow: hidden;
+          border-radius: 18px;
+          border: 1px solid var(--border-glass-bright);
+          box-shadow: var(--player-shadow);
+          isolation: isolate;
+          transition: transform 0.4s ease;
+        }
+
+        .player-rig-box:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 40px 90px -10px rgba(255, 2, 102, 0.22);
+        }
+
+        .player-rig-box::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 2px;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            var(--accent),
+            transparent
+          );
+          opacity: 0.8;
+          z-index: 12;
+          pointer-events: none;
+        }
+
+        iframe#player {
+          width: 100%;
+          height: 100%;
+          border: none;
+          display: block;
+          position: relative;
+          z-index: 5;
+          border-radius: inherit;
+        }
+
+        .player-rig-box.fs-active {
+          position: fixed !important;
+          inset: 0 !important;
+          width: 100vw !important;
+          height: 100dvh !important;
+          max-width: none !important;
+          max-height: none !important;
+          z-index: 9999999 !important;
+          border-radius: 0 !important;
+          border: none !important;
+          transform: none !important;
+          background: #000 !important;
+        }
+
+        .player-lock-overlay {
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.55);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          z-index: 99;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.4s ease;
+        }
+
+        .player-lock-overlay.show {
+          opacity: 1;
+          pointer-events: all;
+        }
+
+        @keyframes floatWidget {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+
+        .floating-widget {
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass-bright);
+          border-radius: 18px;
+          padding: 20px 24px;
+          text-align: center;
+          max-width: 300px;
+          width: 85%;
+          box-shadow:
+            0 20px 40px rgba(0, 0, 0, 0.6),
+            0 0 20px rgba(255, 2, 102, 0.2);
+          position: relative;
+          animation: floatWidget 3s ease-in-out infinite;
+        }
+
+        .widget-title {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 16px;
+          font-weight: 800;
+          color: var(--heading-dynamic);
+          margin-bottom: 4px;
+        }
+
+        .widget-desc {
+          font-size: 11px;
+          color: var(--text-muted);
+          line-height: 1.4;
+          margin-bottom: 14px;
+        }
+
+        .widget-btn-unlock {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 42px;
+          border-radius: 10px;
+          background: linear-gradient(
+            135deg,
+            #FF0266 0%,
+            #FF7597 100%
+          );
+          color: #fff;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 12px;
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: 1.2px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          box-shadow: 0 6px 20px rgba(255, 2, 102, 0.4);
+          cursor: pointer;
+        }
+
+        .widget-btn-unlock:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(255, 2, 102, 0.6);
+          filter: brightness(1.1);
+        }
+
+        .tg-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.65);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          z-index: 1000000;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          opacity: 0;
+          pointer-events: none;
+          transition:
+            opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tg-modal-overlay.show {
+          opacity: 1;
+          pointer-events: all;
+        }
+
+        .tg-modal-box {
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass-bright);
+          border-radius: 20px;
+          padding: clamp(24px, 3.5vw, 36px);
+          text-align: center;
+          max-width: 380px;
+          width: 90%;
+          transform: scale(0.85) translateY(20px);
+          opacity: 0;
+          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow:
+            0 30px 80px rgba(0, 0, 0, 0.5),
+            inset 0 0 30px rgba(255, 2, 102, 0.04);
+          position: relative;
+        }
+
+        .tg-modal-overlay.show .tg-modal-box {
+          transform: scale(1) translateY(0);
+          opacity: 1;
+        }
+
+        .tg-modal-close {
+          position: absolute;
+          top: 12px;
+          right: 14px;
+          background: transparent;
+          border: none;
+          color: var(--text-muted);
+          font-size: 22px;
+          cursor: pointer;
+          transition: color 0.2s ease;
+          line-height: 1;
+        }
+
+        .tg-modal-close:hover {
+          color: var(--accent);
+        }
+
+        .tg-modal-icon {
+          width: 56px;
+          height: 56px;
+          margin: 0 auto 14px;
+          background: rgba(255, 2, 102, 0.1);
+          border-radius: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(255, 2, 102, 0.3);
+          box-shadow: 0 0 18px rgba(255, 2, 102, 0.2);
+          animation: pulseIcon 2s infinite ease-in-out;
+        }
+
+        .tg-modal-icon svg {
+          width: 28px;
+          height: 28px;
+          fill: var(--accent);
+        }
+
+        @keyframes pulseIcon {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 0 18px rgba(255, 2, 102, 0.2);
+          }
+
+          50% {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 2, 102, 0.4);
+          }
+        }
+
+        .tg-modal-title {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(18px, 2vw, 22px);
+          font-weight: 800;
+          color: var(--heading-dynamic);
+          margin-bottom: 6px;
+          letter-spacing: -0.02em;
+        }
+
+        .tg-modal-desc {
+          font-size: clamp(11.5px, 0.95vw, 13px);
+          color: var(--text-muted);
+          line-height: 1.4;
+          margin-bottom: 18px;
+        }
+
+        .tg-modal-btn-join {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          width: 100%;
+          height: 44px;
+          border-radius: 12px;
+          background: linear-gradient(
+            135deg,
+            #FF0266 0%,
+            #FF7597 100%
+          );
+          color: #fff;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 12px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 1.2px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          box-shadow: 0 6px 20px rgba(255, 2, 102, 0.3);
+          cursor: pointer;
+          margin-bottom: 10px;
+        }
+
+        .tg-modal-btn-join:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 30px rgba(255, 2, 102, 0.45);
+          filter: brightness(1.1);
+        }
+
+        .tg-modal-btn-joined {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          border: none;
+          color: var(--text-muted);
+          font-family: 'DM Mono', monospace;
+          font-size: 9.5px;
+          letter-spacing: 0.8px;
+          text-transform: uppercase;
+          cursor: pointer;
+          padding: 5px 10px;
+          transition: color 0.2s ease;
+        }
+
+        .tg-modal-btn-joined:hover {
+          color: var(--accent);
+        }
+
+        .player-meta-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: clamp(10px, 1.2vw, 16px) 2px 0;
+          flex-wrap: wrap;
+        }
+
+        .stream-title-group {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .stream-title-group strong {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(12px, 1.1vw, 15px);
+          font-weight: 700;
+          letter-spacing: -0.2px;
+          color: var(--heading-dynamic);
+        }
+
+        .stream-title-group span {
+          font-family: 'Space Grotesk', sans-serif;
+          color: var(--text-muted);
+          font-size: clamp(7.5px, 0.6vw, 9.5px);
+          letter-spacing: 1px;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+
+        .share-action-btn {
+          height: clamp(32px, 2.6vw, 38px);
+          padding: 0 clamp(12px, 1.4vw, 18px);
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          border-radius: 50px;
+          background: linear-gradient(
+            135deg,
+            var(--bg-card) 0%,
+            rgba(255, 2, 102, 0.12) 100%
+          );
+          border: 1px solid var(--accent);
+          color: var(--text-main);
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(8px, 0.6vw, 9.5px);
+          font-weight: 700;
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
+          cursor: pointer;
+          backdrop-filter: blur(16px);
+          box-shadow: 0 4px 15px var(--accent-glow);
+          transition: all 0.3s ease;
+        }
+
+        .share-action-btn svg {
+          width: 11px;
+          height: 11px;
+          stroke: var(--accent);
+          stroke-width: 2.2;
+          transition: stroke 0.3s ease;
+        }
+
+        .share-action-btn:hover {
+          background: var(--accent);
+          color: #fff;
+          box-shadow: 0 6px 20px var(--accent-glow-intense);
+          transform: translateY(-2px);
+        }
+
+        .share-action-btn:hover svg {
+          stroke: #fff;
+        }
+
+        .community {
+          margin-top: clamp(32px, 4.5vw, 65px);
+          position: relative;
+        }
+
+        .community-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 10px;
+          border-bottom: 1px solid var(--border-glass);
+        }
+
+        .comm-tag {
+          font-family: 'Space Grotesk', sans-serif;
+          color: var(--accent);
+          font-size: clamp(10.5px, 0.9vw, 12px);
+          font-weight: 800;
+          letter-spacing: 1.8px;
+          text-transform: uppercase;
+        }
+
+        .community-body {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 16px;
+          align-items: end;
+          padding: clamp(18px, 2.5vw, 30px) 0;
+        }
+
+        .comm-heading {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(22px, 3.5vw, 44px);
+          line-height: 0.96;
+          letter-spacing: -0.04em;
+          font-weight: 700;
+          max-width: 580px;
+          color: var(--heading-dynamic);
+        }
+
+        .comm-heading span {
+          color: var(--text-dark);
+        }
+
+        .comm-btn-prime {
+          height: clamp(38px, 3.2vw, 44px);
+          padding: 0 clamp(16px, 1.8vw, 24px);
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          border-radius: 50px;
+          background: var(--btn-main-bg);
+          color: var(--btn-main-text);
+          text-decoration: none;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(9.5px, 0.7vw, 11px);
+          font-weight: 800;
+          letter-spacing: 1px;
+          white-space: nowrap;
+          transition: all 0.3s ease;
+        }
+
+        .comm-btn-prime:hover {
+          background: var(--accent);
+          color: #fff;
+          box-shadow: 0 0 20px var(--accent-glow);
+          transform: translateY(-2px);
+        }
+
+        .footer {
+          margin-top: clamp(30px, 4vw, 55px);
+          border-top: 1px solid var(--border-glass);
+          padding: 14px 0 calc(14px + env(safe-area-inset-bottom));
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: var(--text-dark);
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(7.5px, 0.6vw, 9px);
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+
+        .footer strong {
+          color: var(--text-muted);
+        }
+
+        .theme-switch-deck {
+          position: fixed;
+          right: 14px;
+          bottom: 14px;
+          z-index: 900;
+          background: var(--bg-card);
+          border: 1px solid var(--border-glass-bright);
+          border-radius: 50px;
+          backdrop-filter: blur(20px);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+          padding: 2.5px;
+          display: flex;
+          align-items: center;
+          gap: 2.5px;
+        }
+
+        .mode-toggle-btn {
+          height: 24px;
+          padding: 0 7px;
+          display: inline-flex;
+          align-items: center;
+          gap: 3.5px;
+          border: 0;
+          background: transparent;
+          color: var(--text-muted);
+          font-family: 'DM Mono', monospace;
+          font-size: 6.5px;
+          font-weight: 500;
+          letter-spacing: 0.8px;
+          text-transform: uppercase;
+          border-radius: 50px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .mode-toggle-btn i {
+          width: 2.5px;
+          height: 2.5px;
+          border-radius: 50%;
+          background: currentColor;
+          transition: all 0.3s ease;
+        }
+
+        .mode-toggle-btn.active {
+          background: var(--accent);
+          color: #fff;
+          box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .mode-toggle-btn.active i {
+          background: #fff;
+        }
+
+        @media (max-width: 680px) {
+          .live-pill-badge {
+            display: none;
+          }
+
+          .community-body {
+            grid-template-columns: 1fr;
+            gap: 14px;
+          }
+
+          .comm-btn-prime {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .player-meta-bar {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .share-action-btn {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      </style>
+
+      <canvas id="warpGridCanvas"></canvas>
+
+      <div class="container">
+
+        <header class="nav">
+          <a class="brand"
+             href="${this.CONFIG.telegramLink}"
+             target="_blank"
+             rel="noopener">
+            <div class="brand-title">ARJUN CRICKET</div>
+          </a>
+
+          <div class="nav-actions">
+            <div class="live-pill-badge">
+              <i class="pulsing-live-dot"></i>ON AIR
+            </div>
+
+            <a class="nav-join-btn"
+               href="${this.CONFIG.telegramLink}"
+               target="_blank"
+               rel="noopener">
+              JOIN
+            </a>
+          </div>
+        </header>
+
+        <section class="hero">
+
+          <div class="hero-tag">LIVE BROADCAST</div>
+
+          <h1 class="hero-headline">
+            SPORTS TV<br>
+            <span class="accent-txt">BY ARJUN CRICKET.</span>
+          </h1>
+
+          <div class="channel-switcher-section">
+
+            <div class="category-tabs" id="categoryTabs">
+              <button class="cat-tab active"
+                      data-target="starGrid">
+                Star Sports
+              </button>
+
+              <button class="cat-tab"
+                      data-target="sonyGrid">
+                Sony Sports
+              </button>
+
+              <button class="cat-tab"
+                      data-target="movieGrid">
+                Movies
+              </button>
+            </div>
+
+            <div class="channel-grids-container">
+
+              <div class="channel-grid active" id="starGrid">
+                <button class="channel-btn active" data-chid="1">Star Sports 1 SD</button>
+                <button class="channel-btn" data-chid="2">Star Sports 1 HD</button>
+                <button class="channel-btn" data-chid="3">Star Sports 1 Hindi</button>
+                <button class="channel-btn" data-chid="4">Star Sports 1 Hindi HD</button>
+                <button class="channel-btn" data-chid="5">Star Sports 2 SD</button>
+                <button class="channel-btn" data-chid="6">Star Sports 2 HD</button>
+                <button class="channel-btn" data-chid="7">Star Sports 2 Hindi</button>
+                <button class="channel-btn" data-chid="8">Star Sports 2 Hindi HD</button>
+                <button class="channel-btn" data-chid="9">Star Sports 3</button>
+                <button class="channel-btn" data-chid="10">Star Select 1</button>
+                <button class="channel-btn" data-chid="11">Star Select 1 HD</button>
+                <button class="channel-btn" data-chid="12">Star Select 2</button>
+                <button class="channel-btn" data-chid="13">Star Select 2 HD</button>
+                <button class="channel-btn" data-chid="14">Star 1 Tamil SD</button>
+                <button class="channel-btn" data-chid="15">Star 1 Tamil HD</button>
+                <button class="channel-btn" data-chid="16">Star 1 Telugu SD</button>
+                <button class="channel-btn" data-chid="17">Star 1 Telugu HD</button>
+                <button class="channel-btn" data-chid="18">Star 1 Kannada SD</button>
+                <button class="channel-btn" data-chid="19">Star 2 Tamil SD</button>
+                <button class="channel-btn" data-chid="20">Star 2 Tamil HD</button>
+                <button class="channel-btn" data-chid="21">Star 2 Telugu SD</button>
+                <button class="channel-btn" data-chid="22">Star 2 Telugu HD</button>
+                <button class="channel-btn" data-chid="23">Star 2 Kannada SD</button>
+              </div>
+
+              <div class="channel-grid" id="sonyGrid">
+                <button class="channel-btn" data-chid="24">Sony Ten 1</button>
+                <button class="channel-btn" data-chid="25">Sony Ten 2</button>
+                <button class="channel-btn" data-chid="26">Sony Ten 3</button>
+                <button class="channel-btn" data-chid="27">Sony Ten 4 Tamil</button>
+                <button class="channel-btn" data-chid="28">Sony Ten 4 Telugu</button>
+                <button class="channel-btn" data-chid="29">Sony Ten 5</button>
+                <button class="channel-btn" data-chid="30">Sony Ten 1 HD</button>
+                <button class="channel-btn" data-chid="31">Sony Ten 2 HD</button>
+                <button class="channel-btn" data-chid="32">Sony Ten 3 HD</button>
+                <button class="channel-btn" data-chid="33">Sony Ten 5 HD</button>
+              </div>
+
+              <div class="channel-grid" id="movieGrid">
+                <button class="channel-btn" data-chid="34">Sony SET HD</button>
+                <button class="channel-btn" data-chid="35">Sony Max HD</button>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="hero-details">
+            <b>PREMIUM FEED</b>
+            <span class="meta-separator"></span>
+            HD STREAM
+            <span class="meta-separator"></span>
+            LIVE NOW
+          </div>
+
+        </section>
+
+        <main class="broadcast">
+
+          <div class="track-separator-beam"></div>
+
+          <div class="player-rig-box" id="playerContainer">
+
+            <iframe
+              id="player"
+              sandbox="allow-scripts allow-same-origin allow-presentation"
+              allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+              allowfullscreen="true"
+              webkitallowfullscreen="true"
+              mozallowfullscreen="true">
+            </iframe>
+
+            <div class="player-lock-overlay" id="playerLockOverlay">
+              <div class="floating-widget">
+
+                <h3 class="widget-title">
+                  Unlock Stream
+                </h3>
+
+                <p class="widget-desc">
+                  Join channel to watch uninterrupted for 24h.
+                </p>
+
+                <a
+                  class="widget-btn-unlock"
+                  id="tgUnlockBtn"
+                  href="${this.CONFIG.telegramLink}"
+                  target="_blank"
+                  rel="noopener">
+                  UNLOCK STREAM NOW
+                </a>
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="player-meta-bar">
+
+            <div class="stream-title-group">
+              <strong id="currentChannelTitle">
+                Sports TV · Live Broadcast
+              </strong>
+
+              <span>
+                Arjun Cricket Exclusive Access
+              </span>
+            </div>
+
+            <button class="share-action-btn" id="btnShare">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <line
+                  x1="7"
+                  y1="17"
+                  x2="17"
+                  y2="7">
+                </line>
+
+                <polyline
+                  points="7 7 17 7 17 17">
+                </polyline>
+
+              </svg>
+
+              <span id="shareBtnText">
+                SHARE STREAM
+              </span>
+
+            </button>
+
+          </div>
+
+        </main>
+
+        <section class="community">
+
+          <div class="community-header">
+            <div class="comm-tag">
+              ARJUN CRICKET
+            </div>
+          </div>
+
+          <div class="community-body">
+
+            <h2 class="comm-heading">
+              Stay connected.<br>
+              <span>Never miss a match.</span>
+            </h2>
+
+            <a
+              class="comm-btn-prime"
+              href="${this.CONFIG.telegramLink}"
+              target="_blank"
+              rel="noopener">
+              JOIN COMMUNITY
+            </a>
+
+          </div>
+
+        </section>
+
+        <footer class="footer">
+
+          <span>
+            © 2026 <strong>ARJUN CRICKET</strong>
+          </span>
+
+          <span>
+            SPORTS TV · NEON SUITE PRO
+          </span>
+
+        </footer>
+
+      </div>
+
+      <div class="tg-modal-overlay" id="tgModalOne">
+
+        <div class="tg-modal-box">
+
+          <button
+            class="tg-modal-close"
+            id="tgCloseBtn1">
+            &times;
+          </button>
+
+          <div class="tg-modal-icon">
+
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.21 3.45-.49.33-.94.49-1.35.48-.45-.01-1.31-.25-1.95-.46-.79-.26-1.42-.4-1.36-.84.03-.23.35-.47.96-.73 3.77-1.64 6.29-2.73 7.55-3.25 3.59-1.49 4.33-1.75 4.81-1.76.11 0 .35.03.48.14.11.09.14.22.15.34-.01.07-.01.19-.02.26z"/>
+            </svg>
+
+          </div>
+
+          <h3 class="tg-modal-title">
+            Join Channel
+          </h3>
+
+          <p class="tg-modal-desc">
+            Join our channel for instant stream access.
+          </p>
+
+          <a
+            class="tg-modal-btn-join"
+            id="tgJoinBtn1"
+            href="${this.CONFIG.telegramLink}"
+            target="_blank"
+            rel="noopener">
+            JOIN CHANNEL
+          </a>
+
+          <button
+            class="tg-modal-btn-joined"
+            id="tgNextBtn1">
+            Continue
+          </button>
+
+        </div>
+      </div>
+
+      <div class="tg-modal-overlay" id="tgModalTwo">
+
+        <div class="tg-modal-box">
+
+          <button
+            class="tg-modal-close"
+            id="tgCloseBtn2">
+            &times;
+          </button>
+
+          <div class="tg-modal-icon">
+
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.21 3.45-.49.33-.94.49-1.35.48-.45-.01-1.31-.25-1.95-.46-.79-.26-1.42-.4-1.36-.84.03-.23.35-.47.96-.73 3.77-1.64 6.29-2.73 7.55-3.25 3.59-1.49 4.33-1.75 4.81-1.76.11 0 .35.03.48.14.11.09.14.22.15.34-.01.07-.01.19-.02.26z"/>
+            </svg>
+
+          </div>
+
+          <h3 class="tg-modal-title">
+            Join Backup Channel
+          </h3>
+
+          <p class="tg-modal-desc">
+            Join our secondary community link to ensure connectivity.
+          </p>
+
+          <a
+            class="tg-modal-btn-join"
+            id="tgJoinBtn2"
+            href="${this.CONFIG.telegramLink}"
+            target="_blank"
+            rel="noopener">
+            JOIN BACKUP
+          </a>
+
+        </div>
+      </div>
+
+      <aside class="theme-switch-deck">
+
+        <button
+          class="mode-toggle-btn active"
+          id="themeLightBtn">
+          <i></i> Light
+        </button>
+
+        <button
+          class="mode-toggle-btn"
+          id="themeDarkBtn">
+          <i></i> Dark
+        </button>
+
+      </aside>
+    `;
+  }
+
+  check5MinLockStatus() {
+    const savedTime =
+      localStorage.getItem('arjuncricket_24hr_unlocked');
+
+    const twentyFourHours =
+      24 * 60 * 60 * 1000;
+
+    if (
+      savedTime &&
+      (Date.now() - parseInt(savedTime, 10) < twentyFourHours)
+    ) {
+      return;
+    }
+
+    this.lockTimer = setTimeout(() => {
+      const lockOverlay =
+        this._shadow.getElementById('playerLockOverlay');
+
+      if (lockOverlay)
+        lockOverlay.classList.add('show');
+
+    }, this.PREVIEW_TIME);
+  }
+
+  unlockStream24Hr() {
+    localStorage.setItem(
+      'arjuncricket_24hr_unlocked',
+      Date.now().toString()
+    );
+
+    const lockOverlay =
+      this._shadow.getElementById('playerLockOverlay');
+
+    if (lockOverlay)
+      lockOverlay.classList.remove('show');
+  }
+
+  initEventListeners() {
+
+    const btnShare =
+      this._shadow.getElementById("btnShare");
+
+    const shareBtnText =
+      this._shadow.getElementById("shareBtnText");
+
+    const tgCloseBtn1 =
+      this._shadow.getElementById("tgCloseBtn1");
+
+    const tgNextBtn1 =
+      this._shadow.getElementById("tgNextBtn1");
+
+    const tgCloseBtn2 =
+      this._shadow.getElementById("tgCloseBtn2");
+
+    const tgUnlockBtn =
+      this._shadow.getElementById("tgUnlockBtn");
+
+    const categoryTabs =
+      this._shadow.getElementById("categoryTabs");
+
+    if (tgCloseBtn1) {
+      tgCloseBtn1.addEventListener("click", () => {
+
+        const modal1 =
+          this._shadow.getElementById('tgModalOne');
+
+        if (modal1)
+          modal1.classList.remove('show');
+
+      });
+    }
+
+    if (tgNextBtn1) {
+      tgNextBtn1.addEventListener("click", () => {
+
+        const modal1 =
+          this._shadow.getElementById('tgModalOne');
+
+        const modal2 =
+          this._shadow.getElementById('tgModalTwo');
+
+        if (modal1)
+          modal1.classList.remove('show');
+
+        if (modal2)
+          modal2.classList.add('show');
+
+      });
+    }
+
+    if (tgCloseBtn2) {
+      tgCloseBtn2.addEventListener("click", () => {
+
+        const modal2 =
+          this._shadow.getElementById('tgModalTwo');
+
+        if (modal2)
+          modal2.classList.remove('show');
+
+      });
+    }
+
+    if (tgUnlockBtn) {
+      tgUnlockBtn.addEventListener(
+        "click",
+        () => this.unlockStream24Hr()
+      );
+    }
+
+    if (categoryTabs) {
+      categoryTabs.addEventListener("click", (e) => {
+
+        if (e.target.classList.contains('cat-tab')) {
+
+          const tabs =
+            categoryTabs.querySelectorAll('.cat-tab');
+
+          tabs.forEach(t =>
+            t.classList.remove('active')
+          );
+
+          e.target.classList.add('active');
+
+          const targetId =
+            e.target.getAttribute('data-target');
+
+          const grids =
+            this._shadow.querySelectorAll('.channel-grid');
+
+          grids.forEach(g => {
+
+            if (g.id === targetId) {
+              g.classList.add('active');
+            } else {
+              g.classList.remove('active');
+            }
+
+          });
+        }
+      });
+    }
+
+    const container =
+      this._shadow.querySelector('.channel-grids-container');
+
+    if (container) {
+
+      container.addEventListener("click", (e) => {
+
+        if (e.target.classList.contains('channel-btn')) {
+
+          const allButtons =
+            container.querySelectorAll('.channel-btn');
+
+          allButtons.forEach(btn =>
+            btn.classList.remove('active')
+          );
+
+          e.target.classList.add('active');
+
+          const channelId =
+            e.target.getAttribute('data-chid');
+
+          if (this.CHANNELS[channelId]) {
+
+            this.currentChannelId = channelId;
+
+            const channelObj =
+              this.CHANNELS[channelId];
+
+            this.CONFIG.streamManifest =
+              channelObj.url;
+
+            const iframe =
+              this._shadow.getElementById('player');
+
+            if (iframe)
+              iframe.src = channelObj.url;
+
+            const titleElem =
+              this._shadow.getElementById(
+                'currentChannelTitle'
+              );
+
+            if (titleElem) {
+              titleElem.textContent =
+                `${channelObj.name} · Live Broadcast`;
+            }
+
+            const newRelativePathQuery =
+              window.location.pathname +
+              '?id=' +
+              channelId;
+
+            history.pushState(
+              null,
+              '',
+              newRelativePathQuery
+            );
+          }
+        }
+      });
+    }
+
+    if (btnShare) {
+
+      btnShare.addEventListener(
+        "click",
+        async () => {
+
+          const currentShareUrl =
+            window.location.origin +
+            window.location.pathname +
+            '?id=' +
+            this.currentChannelId;
+
+          const activeChannelName =
+            this.CHANNELS[
+              this.currentChannelId
+            ].name;
+
+          const shareData = {
+            title: activeChannelName,
+            text: `${activeChannelName}\n`,
+            url: currentShareUrl
+          };
+
+          try {
+
+            if (
+              navigator.share &&
+              /mobile|android|iphone|ipad|tablet/i
+                .test(navigator.userAgent)
+            ) {
+
+              await navigator.share(shareData);
+
+            } else if (navigator.clipboard) {
+
+              await navigator.clipboard.writeText(
+                `${activeChannelName}: ${currentShareUrl}`
+              );
+
+              const originalText =
+                shareBtnText.textContent;
+
+              shareBtnText.textContent =
+                "LINK COPIED!";
+
+              setTimeout(() => {
+                shareBtnText.textContent =
+                  originalText;
+              }, 1800);
+            }
+
+          } catch (err) {}
+        }
+      );
+    }
+  }
+
+  setupIframePlayer() {
+
+    const iframe =
+      this._shadow.getElementById('player');
+
+    const streamUrl =
+      this.CONFIG.streamManifest;
+
+    if (iframe)
+      iframe.src = streamUrl;
+  }
+
+  initWarpField() {
+
+    const canvas =
+      this._shadow.getElementById('warpGridCanvas');
+
+    if (!canvas)
+      return;
+
+    const ctx =
+      canvas.getContext('2d');
+
+    this.stars = [];
+
+    const starCount =
+      Math.min(
+        100,
+        Math.floor(window.innerWidth / 12)
+      );
+
+    window.addEventListener(
+      'resize',
+      this.boundResize
+    );
+
+    this.boundResize();
+
+    for (let i = 0; i < starCount; i++) {
+
+      this.stars.push({
+
+        x: Math.random() * canvas.width,
+
+        y: Math.random() * canvas.height,
+
+        length:
+          (Math.random() * 20 + 8) *
+          this.SENSITIVITY *
+          0.8,
+
+        speed:
+          (Math.random() * 2.0 + 1.0) *
+          this.SENSITIVITY,
+
+        alpha:
+          Math.random() * 0.4 + 0.1
+      });
+    }
+
+    const render = () => {
+
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      ctx.lineWidth = 1.0;
+
+      this.stars.forEach(star => {
+
+        ctx.strokeStyle =
+          `rgba(255, 2, 102, ${star.alpha})`;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          star.x,
+          star.y
+        );
+
+        ctx.lineTo(
+          star.x + star.length,
+          star.y
+        );
+
+        ctx.stroke();
+
+        star.x += star.speed;
+
+        if (star.x > canvas.width) {
+
+          star.x = -star.length;
+
+          star.y =
+            Math.random() *
+            canvas.height;
+        }
+      });
+
+      this.animationFrameId =
+        requestAnimationFrame(render);
+    };
+
+    render();
+  }
+
+  initThemeSwitching() {
+
+    const darkBtn =
+      this._shadow.getElementById(
+        "themeDarkBtn"
+      );
+
+    const lightBtn =
+      this._shadow.getElementById(
+        "themeLightBtn"
+      );
+
+    if (!darkBtn || !lightBtn)
+      return;
+
+    lightBtn.classList.add("active");
+    darkBtn.classList.remove("active");
+
+    const setTheme = (mode) => {
+
+      if (mode === "dark") {
+
+        this.setAttribute(
+          "data-theme",
+          "dark"
+        );
+
+        darkBtn.classList.add("active");
+        lightBtn.classList.remove("active");
+
+      } else {
+
+        this.removeAttribute(
+          "data-theme"
+        );
+
+        lightBtn.classList.add("active");
+        darkBtn.classList.remove("active");
+      }
+    };
+
+    darkBtn.addEventListener(
+      "click",
+      () => setTheme("dark")
+    );
+
+    lightBtn.addEventListener(
+      "click",
+      () => setTheme("light")
+    );
+  }
+}
+
+customElements.define(
+  'arjuncricket-ui',
+  ArjunCricketUI
+);
+</script>
+
 </body>
   </html>
